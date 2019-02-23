@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kmat.service.model.User;
 import com.kmat.service.repository.UserRepo;
 import com.kmat.service.utils.HashingService;
+import org.apache.commons.lang3.StringUtils;
 
 @RestController
 public class UserController {
@@ -39,7 +40,7 @@ public class UserController {
 		Date date = new Date();
 
 		user.setDate(date);
-		
+
 		repo.save(user);
 
 		return "1003"; // registration success
@@ -53,51 +54,43 @@ public class UserController {
 
 		user.setPassword(HashingService.encodeValue(user.getPassword()));
 
-		Optional<User> data = repo.findById(user.getMobile());
+		if (!StringUtils.isBlank(user.getEmail())) {
 
-		System.out.println(data.toString());
+			List<User> data = mongoTemplate.find(
+					Query.query(new Criteria().orOperator((Criteria.where("email").is(user.getEmail())))), User.class);
 
-		if (data.isPresent()) {
+			if (!data.isEmpty()) {
 
-			System.out.println(data);
-
-			if (data.get().getPassword().equals(user.getPassword())) {
-
-				return "1001"; // password matches
+				return getValueById(data.get(0).getMobile(), user.getPassword());
 			}
 
-			return "1002"; // password doesn't matches
+			return "1004"; // data not found
 
 		}
 
-		return "1004"; // data not found
+		return getValueById(user.getMobile(), user.getPassword());
 
 	}
 
 	@GetMapping("/getUser/{id}")
-	public User getUserById(@PathVariable String id) {
+	public Optional<User> getUserById(@PathVariable String id) {
 
 		Optional<User> data = repo.findById(id);
 
-		User usr = new User();
-		usr.setEmail(data.get().getEmail());
-		usr.setMobile(data.get().getMobile());
-		usr.setFirstname(data.get().getFirstname());
-		usr.setLastname(data.get().getLastname());
-		usr.setRole(data.get().getRole());
-		usr.setFlag(data.get().isFlag());
-		usr.setDate(data.get().getDate());
+		data.get().setPassword(null);
 
-		return usr;
+		return data;
 	}
 
 	@GetMapping("/emailCheck/{id}")
 	public Boolean emailCheck(@PathVariable String id) {
 
-		List<User> email = mongoTemplate.find(Query.query(new Criteria().orOperator((Criteria.where("email").is(id)))),
+		List<User> data = mongoTemplate.find(Query.query(new Criteria().orOperator((Criteria.where("email").is(id)))),
 				User.class);
 
-		if (email.isEmpty()) {
+		System.out.println(data.get(0).getMobile());
+
+		if (data.isEmpty()) {
 
 			return false;
 		}
@@ -121,4 +114,24 @@ public class UserController {
 
 	}
 
+	private String getValueById(String id, String password) {
+
+		System.out.println("method" + id + password);
+
+		Optional<User> check = repo.findById(id);
+
+		if (check.isPresent()) {
+
+			if (check.get().getPassword().equals(password)) {
+
+				return "1001"; // password matches
+			}
+
+			return "1002"; // password doesn't matches
+
+		}
+
+		return "1004"; // data not found
+
+	}
 }
