@@ -30,7 +30,7 @@ public class UserController {
 	UserRepo repo;
 
 	@PostMapping("/signUp")
-	public User signUp(@RequestBody User user) {
+	public String signUp(@RequestBody User user) {
 
 		LOGGER.debug("email: {}, mobile: {}", user.getEmail(), user.getMobile());
 
@@ -39,8 +39,10 @@ public class UserController {
 		Date date = new Date();
 
 		user.setDate(date);
+		
+		repo.save(user);
 
-		return repo.save(user);
+		return "1003"; // registration success
 
 	}
 
