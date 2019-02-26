@@ -3,6 +3,7 @@ package com.kmat.service.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kmat.service.exception.AppException;
+import com.kmat.service.exception.ErrorCode;
+import com.kmat.service.exception.ResponseStatusCode;
 import com.kmat.service.model.Profile;
 import com.kmat.service.repository.ProfileRepo;
 import com.kmat.service.utils.FileUtil;
@@ -29,10 +33,10 @@ public class FileController {
 	@Autowired private ProfileRepo profileRepo;
 	
 	@PostMapping(path = "/profiles/{profileId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable("profileId") String profileId) {
+	public void uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable("profileId") String profileId, Locale locale) throws Exception {
 		
 		if (StringUtils.isBlank(profileId)) {
-			// TODO: throw error
+			throw new AppException(ResponseStatusCode.NOT_FOUND, ErrorCode.ENTITY_NOT_FOUND, locale);
 		}
 		
 		if (file == null || file.getSize() <= 0) {
@@ -41,7 +45,9 @@ public class FileController {
 		
 		Optional<Profile> profileOpt = profileRepo.findById(profileId);
 		
-		if (! profileOpt.isPresent()) { /*TODO throw error*/ }
+		if (! profileOpt.isPresent()) { 
+			throw new AppException(ResponseStatusCode.NOT_FOUND, ErrorCode.ENTITY_NOT_FOUND, locale, "Profile");
+		}
 		
 		String pathname = profileId + "-" + (new Date()).getTime() + "."+getExtensionByStringHandling(file.getOriginalFilename());
 		
