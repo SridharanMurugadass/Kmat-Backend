@@ -501,25 +501,23 @@ var LoginComponent = /** @class */ (function () {
         });
     };
     LoginComponent.prototype.onLogin = function () {
+        var _this = this;
         console.log(this.loginForm.value);
-        // this.submitted = true;
-        // // console.log(this.registerForm.value);
-        // // stop here if form is invalid
-        // if (this.registerForm.invalid) {
-        //   return;
-        // }
-        // this.loading = true;
-        // this._service.register(this.registerForm.value).subscribe(
-        //   data => {
-        //     console.log("Registration successful");
-        //     //this.alertService.success("Registration successful", true);
-        //     //this.router.navigate(["/login"]);
-        //   },
-        //   error => {
-        //     // this.alertService.error(error);
-        //     this.loading = false;
-        //   }
-        // );
+        this.submitted = true;
+        // console.log(this.registerForm.value);
+        // stop here if form is invalid
+        if (this.loginForm.invalid) {
+            return;
+        }
+        this.loading = true;
+        this._service.login(this.loginForm.value.userid, this.loginForm.value.password).subscribe(function (data) {
+            console.log("Registration successful");
+            //this.alertService.success("Registration successful", true);
+            //this.router.navigate(["/login"]);
+        }, function (error) {
+            // this.alertService.error(error);
+            _this.loading = false;
+        });
     };
     LoginComponent.prototype.close = function () {
         this.loginForm = this.formBuilder.group({
@@ -770,6 +768,7 @@ var KonguService = /** @class */ (function () {
         return this._http.post(this.URL + "/signUp", user);
     };
     KonguService.prototype.login = function (userId, passowrd) {
+        console.log("Test data in service", userId, passowrd);
         return this._http.post(this.URL + "/signIn", { username: userId, passowrd: passowrd });
     };
     KonguService = __decorate([
