@@ -767,7 +767,7 @@ var KonguService = /** @class */ (function () {
     }
     KonguService.prototype.register = function (user) {
         console.log("User : ", user);
-        return this._http.post("https://kmat.herokuapp.com" + "/signUp", user);
+        return this._http.post("http://localhost:8080" + "/signUp", user);
     };
     KonguService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({ providedIn: 'root' }),
