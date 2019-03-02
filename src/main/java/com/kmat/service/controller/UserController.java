@@ -51,7 +51,7 @@ public class UserController {
 
 	@CrossOrigin
 	@PostMapping("/signIn")
-	public String signIn(@RequestBody User user) {
+	public Optional<User> signIn(@RequestBody User user) {
 
 		LOGGER.debug("email: {}, mobile: {}", user.getEmail(), user.getMobile());
 
@@ -59,19 +59,19 @@ public class UserController {
 
 		if (!StringUtils.isBlank(user.getEmail())) {
 
-			List<User> data = mongoTemplate.find(
-					Query.query(new Criteria().orOperator((Criteria.where("email").is(user.getEmail())))), User.class);
+			List<User> data = mongoTemplate.find(Query.query(new Criteria().orOperator((Criteria.where("email")
+					.is(user.getEmail()).andOperator(Criteria.where("password").is(user.getPassword()))))), User.class);
 
 			if (!data.isEmpty()) {
 
-				return getValueById(data.get(0).getMobile(), user.getPassword());
+				return getValueById(data.get(0).getMobile(), user.getPassword(), user);
 			}
 
-			return "1004"; // data not found
+			return null; // data not found
 
 		}
 
-		return getValueById(user.getMobile(), user.getPassword());
+		return getValueById(user.getMobile(), user.getPassword(), user);
 
 	}
 
@@ -120,7 +120,7 @@ public class UserController {
 
 	}
 
-	private String getValueById(String id, String password) {
+	private Optional<User> getValueById(String id, String password, User user) {
 
 		Optional<User> check = repo.findById(id);
 
@@ -128,26 +128,22 @@ public class UserController {
 
 			if (check.get().getPassword().equals(password)) {
 
-				return "1001"; // password matches
+				return check; // password matches
 			}
 
-			return "1002"; // password doesn't matches
+			return null; // password doesn't matches
 
 		}
 
-		return "1004"; // data not found
+		return null; // data not found
 
 	}
-	
+
 	@CrossOrigin
 	@GetMapping("/emaiVerify/{id}")
 	public Optional<User> emaiVerify(@PathVariable String id) {
 
-		
-		
-		
 		return null;
 	}
-	
 
 }
