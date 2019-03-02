@@ -11,15 +11,35 @@ public class User {
 	private String firstname;
 	private String lastname;
 	private String email;
-	private Date date;
+	private Date createdDate;
 
-	public Date getDate() {
-		return date;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
+
+	private boolean agreementFlag;
+
+	public boolean isAgreementFlag() {
+		return agreementFlag;
+	}
+
+	public void setAgreementFlag(boolean agreementFlag) {
+		this.agreementFlag = agreementFlag;
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	private Date expiryDate;
 
 	public String getFirstname() {
 		return firstname;
@@ -48,14 +68,14 @@ public class User {
 	}
 
 	private String role;
-	private boolean flag;
+	private boolean accFlag;
 
-	public boolean isFlag() {
-		return flag;
+	public boolean isAccFlag() {
+		return accFlag;
 	}
 
-	public void setFlag(boolean flag) {
-		this.flag = flag;
+	public void setAccFlag(boolean accFlag) {
+		this.accFlag = accFlag;
 	}
 
 	public String getEmail() {

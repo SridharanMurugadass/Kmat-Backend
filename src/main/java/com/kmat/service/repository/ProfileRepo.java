@@ -5,6 +5,4 @@ import com.kmat.service.model.Profile;
 
 public interface ProfileRepo extends MongoRepository<Profile, String> {
 
-	
-
 }

@@ -9,6 +9,4 @@ public class KmatBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KmatBackendApplication.class, args);
 	}
-
 }
-

@@ -1,14 +1,44 @@
 package com.kmat.service.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 import org.springframework.data.annotation.Id;
 
 public class Profile {
-@Id
+	@Id
 	private String profileId;
 	private String placeOfBirth;
+	private List<Relationship> relationShip;
+	private Date dob;
+	private String godName;
+	private String godPlace;
+
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
+
+	private List<Address> address;
+
+	public List<Relationship> getRelationShip() {
+		return relationShip;
+	}
+
+	public void setRelationShip(List<Relationship> relationShip) {
+		this.relationShip = relationShip;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
 
 	public String getProfileId() {
 		return profileId;
@@ -245,9 +275,90 @@ public class Profile {
 	private String physicalStatus;
 	private String annualIncome;
 	private String prefferedLocation;
+	private String prefferedOccupation;
 	private String noOfSiblings;
 	private String siblingsMaritalStatus;
 	private String fatherOccupation;
 	private String fatherContactNo;
 	private List<String> imagePaths;
+	private String moonSign;
+	private String lagnam;
+	private String star;
+
+	public String getGodName() {
+		return godName;
+	}
+
+	public void setGodName(String godName) {
+		this.godName = godName;
+	}
+
+	public String getGodPlace() {
+		return godPlace;
+	}
+
+	public void setGodPlace(String godPlace) {
+		this.godPlace = godPlace;
+	}
+
+	public String getPrefferedOccupation() {
+		return prefferedOccupation;
+	}
+
+	public void setPrefferedOccupation(String prefferedOccupation) {
+		this.prefferedOccupation = prefferedOccupation;
+	}
+
+	public String getMoonSign() {
+		return moonSign;
+	}
+
+	public void setMoonSign(String moonSign) {
+		this.moonSign = moonSign;
+	}
+
+	public String getLagnam() {
+		return lagnam;
+	}
+
+	public void setLagnam(String lagnam) {
+		this.lagnam = lagnam;
+	}
+
+	public String getStar() {
+		return star;
+	}
+
+	public void setStar(String star) {
+		this.star = star;
+	}
+
+	public boolean isDosham() {
+		return isDosham;
+	}
+
+	public void setDosham(boolean isDosham) {
+		this.isDosham = isDosham;
+	}
+
+	public String getDosham() {
+		return dosham;
+	}
+
+	public void setDosham(String dosham) {
+		this.dosham = dosham;
+	}
+
+	public int getImageCount() {
+		return imageCount;
+	}
+
+	public void setImageCount(int imageCount) {
+		this.imageCount = imageCount;
+	}
+
+	private boolean isDosham;
+	private String dosham;
+	private int imageCount;
+
 }

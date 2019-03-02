@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ public class UserController {
 	@Autowired
 	UserRepo repo;
 
+	@CrossOrigin
 	@PostMapping("/signUp")
 	public String signUp(@RequestBody User user) {
 
@@ -39,7 +41,7 @@ public class UserController {
 
 		Date date = new Date();
 
-		user.setDate(date);
+		user.setCreatedDate(date);
 
 		repo.save(user);
 
@@ -47,6 +49,7 @@ public class UserController {
 
 	}
 
+	@CrossOrigin
 	@PostMapping("/signIn")
 	public String signIn(@RequestBody User user) {
 
@@ -72,6 +75,7 @@ public class UserController {
 
 	}
 
+	@CrossOrigin
 	@GetMapping("/getUser/{id}")
 	public Optional<User> getUserById(@PathVariable String id) {
 
@@ -82,6 +86,7 @@ public class UserController {
 		return data;
 	}
 
+	@CrossOrigin
 	@GetMapping("/emailCheck/{id}")
 	public Boolean emailCheck(@PathVariable String id) {
 
@@ -99,6 +104,7 @@ public class UserController {
 
 	}
 
+	@CrossOrigin
 	@GetMapping("/mobileCheck/{id}")
 	public Boolean mobileCheck(@PathVariable String id) {
 
@@ -116,8 +122,6 @@ public class UserController {
 
 	private String getValueById(String id, String password) {
 
-		System.out.println("method" + id + password);
-
 		Optional<User> check = repo.findById(id);
 
 		if (check.isPresent()) {
@@ -134,4 +138,16 @@ public class UserController {
 		return "1004"; // data not found
 
 	}
+	
+	@CrossOrigin
+	@GetMapping("/emaiVerify/{id}")
+	public Optional<User> emaiVerify(@PathVariable String id) {
+
+		
+		
+		
+		return null;
+	}
+	
+
 }
