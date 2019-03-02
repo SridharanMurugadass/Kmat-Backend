@@ -325,15 +325,14 @@ var appRoutes = [
     { path: 'services', component: _pages_services_services_component__WEBPACK_IMPORTED_MODULE_10__["ServicesComponent"] },
     { path: 'profile', component: _pages_profile_profile_component__WEBPACK_IMPORTED_MODULE_14__["ProfileComponent"] },
     { path: 'contact', component: _pages_contact_contact_component__WEBPACK_IMPORTED_MODULE_8__["ContactComponent"] },
-    {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
-    },
+    // {
+    //   path: '',
+    //   redirectTo: 'home',
+    //   pathMatch: 'full'
+    // },
     {
         path: '**',
-        redirectTo: 'home',
-        pathMatch: 'full'
+        redirectTo: 'home'
     }
 ];
 var AppModule = /** @class */ (function () {
