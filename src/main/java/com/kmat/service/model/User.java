@@ -11,7 +11,44 @@ public class User {
 	private String firstname;
 	private String lastname;
 	private String email;
+	public Date getChequeNumber() {
+		return chequeNumber;
+	}
+
+	public void setChequeNumber(Date chequeNumber) {
+		this.chequeNumber = chequeNumber;
+	}
+
+	public Date getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(Date bankName) {
+		this.bankName = bankName;
+	}
+
+	public Date getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(Date branchName) {
+		this.branchName = branchName;
+	}
+
+	public Date getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Date amount) {
+		this.amount = amount;
+	}
+
 	private Date createdDate;
+	private Date chequeNumber;
+	private Date bankName;
+	private Date branchName;
+	private Date amount;
+	
 
 	public Date getCreatedDate() {
 		return createdDate;
