@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  alert works!\n</p>\n"
+module.exports = "<div *ngIf=\"message\"\n  [ngClass]=\"{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }\">\n  {{message.text}}</div>"
 
 /***/ }),
 
@@ -90,6 +90,103 @@ var AlertComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_services_alert_service__WEBPACK_IMPORTED_MODULE_1__["AlertService"]])
     ], AlertComponent);
     return AlertComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_helpers/error.interceptor.ts":
+/*!***********************************************!*\
+  !*** ./src/app/_helpers/error.interceptor.ts ***!
+  \***********************************************/
+/*! exports provided: ErrorInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ErrorInterceptor", function() { return ErrorInterceptor; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_services_authentication_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../app/_services/authentication.service */ "./src/app/_services/authentication.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var ErrorInterceptor = /** @class */ (function () {
+    function ErrorInterceptor(authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+    ErrorInterceptor.prototype.intercept = function (request, next) {
+        var _this = this;
+        return next.handle(request).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function (err) {
+            if (err.status === 401) {
+                // auto logout if 401 response returned from api
+                _this.authenticationService.logout();
+                location.reload(true);
+            }
+            var error = err.error.message || err.statusText;
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["throwError"])(error);
+        }));
+    };
+    ErrorInterceptor = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_app_services_authentication_service__WEBPACK_IMPORTED_MODULE_3__["AuthenticationService"]])
+    ], ErrorInterceptor);
+    return ErrorInterceptor;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_helpers/jwt.interceptor.ts":
+/*!*********************************************!*\
+  !*** ./src/app/_helpers/jwt.interceptor.ts ***!
+  \*********************************************/
+/*! exports provided: JwtInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JwtInterceptor", function() { return JwtInterceptor; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var JwtInterceptor = /** @class */ (function () {
+    function JwtInterceptor() {
+    }
+    JwtInterceptor.prototype.intercept = function (request, next) {
+        // add authorization header with jwt token if available
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser && currentUser.token) {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: "Bearer " + currentUser.token
+                }
+            });
+        }
+        return next.handle(request);
+    };
+    JwtInterceptor = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])()
+    ], JwtInterceptor);
+    return JwtInterceptor;
 }());
 
 
@@ -167,6 +264,66 @@ var AlertService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/_services/authentication.service.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/_services/authentication.service.ts ***!
+  \*****************************************************/
+/*! exports provided: AuthenticationService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthenticationService", function() { return AuthenticationService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var AuthenticationService = /** @class */ (function () {
+    function AuthenticationService(http) {
+        this.http = http;
+        this.serviceURL = 'https://kmat.herokuapp.com';
+    }
+    AuthenticationService.prototype.login = function (emailMobile, password) {
+        return this.http.post(this.serviceURL + "/signIn", { mobile: emailMobile, password: password })
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (user) {
+            // login successful if there's a jwt token in the response
+            console.log('user :: ', user);
+            // console.log('user token :: ', user.token);
+            if (user && user.token) {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            }
+            return user;
+        }));
+    };
+    AuthenticationService.prototype.logout = function () {
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
+    };
+    AuthenticationService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+    ], AuthenticationService);
+    return AuthenticationService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/_services/kongu.service.ts":
 /*!********************************************!*\
   !*** ./src/app/_services/kongu.service.ts ***!
@@ -231,7 +388,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<router-outlet></router-outlet>"
+module.exports = "<app-alert></app-alert>\r\n<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -297,6 +454,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _directives_alert_alert_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./_directives/alert/alert.component */ "./src/app/_directives/alert/alert.component.ts");
 /* harmony import */ var _pages_profile_profile_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pages/profile/profile.component */ "./src/app/pages/profile/profile.component.ts");
 /* harmony import */ var _pages_header_header_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./pages/header/header.component */ "./src/app/pages/header/header.component.ts");
+/* harmony import */ var _helpers_error_interceptor__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./_helpers/error.interceptor */ "./src/app/_helpers/error.interceptor.ts");
+/* harmony import */ var _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./_helpers/jwt.interceptor */ "./src/app/_helpers/jwt.interceptor.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -319,21 +478,16 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
+
 var appRoutes = [
     { path: 'home', component: _pages_home_home_component__WEBPACK_IMPORTED_MODULE_6__["HomeComponent"] },
+    { path: 'home#login-popup', component: _pages_home_home_component__WEBPACK_IMPORTED_MODULE_6__["HomeComponent"] },
     { path: 'about', component: _pages_about_about_component__WEBPACK_IMPORTED_MODULE_7__["AboutComponent"] },
     { path: 'services', component: _pages_services_services_component__WEBPACK_IMPORTED_MODULE_10__["ServicesComponent"] },
     { path: 'profile', component: _pages_profile_profile_component__WEBPACK_IMPORTED_MODULE_14__["ProfileComponent"] },
     { path: 'contact', component: _pages_contact_contact_component__WEBPACK_IMPORTED_MODULE_8__["ContactComponent"] },
-    // {
-    //   path: '',
-    //   redirectTo: 'home',
-    //   pathMatch: 'full'
-    // },
-    {
-        path: '**',
-        redirectTo: 'home'
-    }
+    { path: '**', redirectTo: '/home' }
 ];
 var AppModule = /** @class */ (function () {
     function AppModule() {
@@ -360,7 +514,10 @@ var AppModule = /** @class */ (function () {
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(appRoutes)
             ],
-            providers: [],
+            providers: [
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HTTP_INTERCEPTORS"], useClass: _helpers_jwt_interceptor__WEBPACK_IMPORTED_MODULE_17__["JwtInterceptor"], multi: true },
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HTTP_INTERCEPTORS"], useClass: _helpers_error_interceptor__WEBPACK_IMPORTED_MODULE_16__["ErrorInterceptor"], multi: true },
+            ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
         })
     ], AppModule);
@@ -578,7 +735,7 @@ module.exports = ".dropdown \r\n{\r\ncolor:  #555;\r\nmargin: -20px -22px 0 100%
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- top header -->\n<section class=\"row top_header pt-3\">\n  <div class=\"col-lg-6 buttons ml-auto\">\n    <p style=\"color:#004b1a\"><span style=\"color:#004b1a\" class=\"fa fa-phone\"></span> +91-424-2270227</p>\n    <p *ngIf=\"currentUser\" style=\"color:#004b1a\"> Welcome</p>\n    <a *ngIf=\"!currentUser\" class=\"btn btn-info btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\"\n      href=\"/home#login-popup\">Login</a>\n    <a *ngIf=\"!currentUser\" class=\"btn btn-info1 btn-lg-block w3ls-btn1 px-sm-4 px-3 text-capitalize\"\n      href=\"/home#register-popup\">Register</a>\n  </div>\n\n  <!-- logout menu -->\n  <div *ngIf=\"currentUser\" class=\"dropdown\">\n    <a class=\"account\"><b>{{currentUser.firstname}}</b></a>\n    <div class=\"submenu\">\n      <ul class=\"root\">\n        <li><a href=\"#Dashboard\">Dashboard</a></li>\n        <li><a href=\"#Profile\">Profile</a></li>\n        <li><a href=\"#settings\">Settings</a></li>\n        <li><a href=\"#feedback\">Send Feedback</a></li>\n        <li><a href=\"/\" (click)=\"logout()\">Logout</a></li>\n      </ul>\n    </div>\n  </div>\n  <!-- logout menu -->\n</section>\n<!-- top header -->\n\n<div *ngIf=\"currentUser\" id=\"logo\">\n  <h1>\n    <a style=\"color:#004b1a\" class=\"navbar-brand\" href=\"index.html\">\n      <span class=\"fa fa-empire\"></span>Kongu Manamedai\n      <!-- <span><span class=\"line\"></span>Organizer</span> -->\n    </a>\n  </h1>\n</div>"
+module.exports = "<!-- top header -->\n<section class=\"row top_header pt-3\">\n  <div class=\"col-lg-6 buttons ml-auto\">\n    <p><span class=\"fa fa-phone\"></span> +91-424-2270227</p>\n    <p *ngIf=\"currentUser\"> Welcome</p>\n    <a *ngIf=\"!currentUser\" class=\"btn btn-info btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\"\n      href=\"/home#login-popup\">Login</a>\n    <a *ngIf=\"!currentUser\" class=\"btn btn-info1 btn-lg-block w3ls-btn1 px-sm-4 px-3 text-capitalize\"\n      href=\"/home#register-popup\">Register</a>\n  </div>\n\n  <!-- logout menu -->\n  <div *ngIf=\"currentUser\" class=\"dropdown\">\n    <a class=\"account\"><b>{{currentUser.firstname}}</b></a>\n    <div class=\"submenu\">\n      <ul class=\"root\">\n        <li><a href=\"#Dashboard\">Dashboard</a></li>\n        <li><a href=\"#Profile\">Profile</a></li>\n        <li><a href=\"#settings\">Settings</a></li>\n        <li><a href=\"#feedback\">Send Feedback</a></li>\n        <li><a href=\"/\" (click)=\"logout()\">Logout</a></li>\n      </ul>\n    </div>\n  </div>\n  <!-- logout menu -->\n</section>\n<!-- top header -->\n\n<div *ngIf=\"currentUser\" id=\"logo\">\n  <h1>\n    <a class=\"navbar-brand\" href=\"index.html\">\n      <span class=\"fa fa-empire\"></span>Kongu Manamedai\n      <!-- <span><span class=\"line\"></span>Organizer</span> -->\n    </a>\n  </h1>\n</div>"
 
 /***/ }),
 
@@ -739,7 +896,7 @@ module.exports = "/** test */\n/*# sourceMappingURL=data:application/json;base64
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"loginFrm\">\n  <h5 class=\"modal-title text-uppercase\">Login</h5>\n  <form action=\"#\" [formGroup]=\"loginForm\" class=\"px-3 pt-3 pb-0\">\n    <div class=\"form-group\">\n      <label for=\"recipient-name\" class=\"col-form-label\">Mobile / Email</label>\n      <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"emailMobile\" id=\"recipient-name\"\n        required=\"\" />\n    </div>\n    <div class=\"form-group\">\n      <label for=\"recipient-name1\" class=\"col-form-label\">Password</label>\n      <input type=\"password\" class=\"form-control\" placeholder=\"\" formControlName=\"password\" id=\"recipient-name1\"\n        required=\"\" />\n    </div>\n    <!-- <div class=\"right-w3l\">\n          <input type=\"submit\" class=\"form-control\" value=\"Login\" />\n          <img *ngIf=\"loading\"\n            src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div> -->\n    <div class=\"col-lg-12  ml-auto\">\n      <!--buttons-->\n      <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" href=\"home#\"\n        (click)=\"onLogin()\">Login</a>\n      <a class=\"btn btn-info1 btn-lg-block w3ls-btn1 px-sm-4 px-3 text-capitalize\" id=\"forgot\">Forgot\n        Password</a>\n    </div>\n  </form>\n</div>\n<div id=\"forgotPWFrm\">\n  <h5 class=\"modal-title text-uppercase\">Forgot Password</h5>\n  <form action=\"#\" [formGroup]=\"forgotPasswordForm\" class=\"px-3 pt-3 pb-0\" (ngSubmit)=\"onForgot()\">\n    <div class=\"form-group\">\n      <label for=\"recipient-name\" class=\"col-form-label\">Email</label>\n      <input type=\"email\" class=\"form-control\" placeholder=\"\" name=\"Name\" id=\"recipient-name\" required=\"\" />\n    </div>\n    <div class=\"right-w3l\">\n      <input type=\"submit\" class=\"form-control\" value=\"Submit\" />\n      <img *ngIf=\"loading\"\n        src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n    </div>\n  </form>\n</div>\n\n<a class=\"close\" (click)=\"close()\" href=\"home#\">&times;</a>\n\n\n<!-- popup for login -->\n<div id=\"forgot-password-popup\" class=\"popup-effect\">\n  <div class=\"popup\">\n    <h5 class=\"modal-title text-uppercase\">Forgot Password</h5>\n    <div class=\"forgot-form\">\n      <!-- <form action=\"#\" [formGroup]=\"forgotPasswordForm\" class=\"px-3 pt-3 pb-0\" (ngSubmit)=\"onForgot()\">\n        <div class=\"form-group\">\n          <label for=\"recipient-name\" class=\"col-form-label\">Email</label>\n          <input type=\"email\" class=\"form-control\" placeholder=\"\" name=\"Name\" id=\"recipient-name\" required=\"\" />\n        </div>\n        <div class=\"right-w3l\">\n          <input type=\"submit\" class=\"form-control\" value=\"Login\" />\n          <img *ngIf=\"loading\"\n            src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n      </form> -->\n    </div>\n    <a class=\"close\" href=\"home#\">&times;</a>\n  </div>\n</div>\n<!-- popup for login -->"
+module.exports = "<div *ngIf=\"message\" style=\"color:red;\"\n  [ngClass]=\"{ 'alert': message, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }\">\n  {{message}}</div>\n<div id=\"loginFrm\">\n  <h5 class=\"modal-title text-uppercase\">Login</h5>\n  <!-- <div class=\"form-group\">\n    <img *ngIf=\"loading\" style=\"width:5%;height:5%;text-align: center;\"\n      src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n  </div> -->\n  <form action=\"#\" [formGroup]=\"loginForm\" (ngSubmit)=\"onSubmit()\" class=\"px-3 pt-3 pb-0\">\n    <div class=\"form-group\">\n      <label for=\"emailMobile\" class=\"col-form-label\">Mobile / Email</label>\n      <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"emailMobile\" id=\"recipient-name\"\n        [ngClass]=\"{ 'is-invalid': submitted && f.emailMobile.errors }\" />\n      <div *ngIf=\"submitted && f.emailMobile.errors\" class=\"invalid-feedback\">\n        <div *ngIf=\"f.emailMobile.errors.required\">Email / Mobile is required</div>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <label for=\"recipient-name1\" class=\"col-form-label\">Password</label>\n      <input type=\"password\" class=\"form-control\" placeholder=\"\" formControlName=\"password\" id=\"recipient-name1\"\n        [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n      <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n        <div *ngIf=\"f.password.errors.required\">Password is required</div>\n      </div>\n    </div>\n    <!-- <div class=\"right-w3l\">\n          <input type=\"submit\" class=\"form-control\" value=\"Login\" />\n          <img *ngIf=\"loading\"\n            src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div> -->\n    <div class=\"col-lg-12  ml-auto\">\n      <!--buttons-->\n      <button class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\">Login</button>\n      <!-- <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" href=\"home#\" -->\n      <!-- (click)=\"onLogin()\">Login</a> -->\n      <a class=\"btn btn-info1 btn-lg-block w3ls-btn1 px-sm-4 px-3 text-capitalize\" id=\"forgot\">Forgot\n        Password</a>\n    </div>\n  </form>\n</div>\n<div id=\"forgotPWFrm\">\n  <h5 class=\"modal-title text-uppercase\">Forgot Password</h5>\n  <form action=\"#\" [formGroup]=\"forgotPasswordForm\" class=\"px-3 pt-3 pb-0\" (ngSubmit)=\"onForgot()\">\n    <div class=\"form-group\">\n      <label for=\"recipient-name\" class=\"col-form-label\">Email</label>\n      <input type=\"email\" class=\"form-control\" placeholder=\"\" name=\"Name\" id=\"recipient-name\" required=\"\" />\n    </div>\n    <div class=\"right-w3l\">\n      <input type=\"submit\" class=\"form-control\" value=\"Submit\" />\n      <img *ngIf=\"loading\"\n        src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n    </div>\n  </form>\n</div>\n\n<a class=\"close\" (click)=\"close()\" href=\"home#\">&times;</a>\n\n\n<!-- popup for login -->\n<div id=\"forgot-password-popup\" class=\"popup-effect\">\n  <div class=\"popup\">\n    <h5 class=\"modal-title text-uppercase\">Forgot Password</h5>\n    <div class=\"forgot-form\">\n      <!-- <form action=\"#\" [formGroup]=\"forgotPasswordForm\" class=\"px-3 pt-3 pb-0\" (ngSubmit)=\"onForgot()\">\n        <div class=\"form-group\">\n          <label for=\"recipient-name\" class=\"col-form-label\">Email</label>\n          <input type=\"email\" class=\"form-control\" placeholder=\"\" name=\"Name\" id=\"recipient-name\" required=\"\" />\n        </div>\n        <div class=\"right-w3l\">\n          <input type=\"submit\" class=\"form-control\" value=\"Login\" />\n          <img *ngIf=\"loading\"\n            src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n      </form> -->\n    </div>\n    <a class=\"close\" href=\"home#\">&times;</a>\n  </div>\n</div>\n<!-- popup for login -->"
 
 /***/ }),
 
@@ -754,12 +911,13 @@ module.exports = "<div id=\"loginFrm\">\n  <h5 class=\"modal-title text-uppercas
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoginComponent", function() { return LoginComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _app_services_kongu_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../app/_services/kongu.service */ "./src/app/_services/kongu.service.ts");
+/* harmony import */ var _services_authentication_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../_services/authentication.service */ "./src/app/_services/authentication.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _services_alert_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../_services/alert.service */ "./src/app/_services/alert.service.ts");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -775,19 +933,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(_service, _activateRoute, _router, formBuilder, alertService) {
-        this._service = _service;
+    function LoginComponent(formBuilder, _activateRoute, _router, authenticationService, alertService) {
+        this.formBuilder = formBuilder;
         this._activateRoute = _activateRoute;
         this._router = _router;
-        this.formBuilder = formBuilder;
+        this.authenticationService = authenticationService;
         this.alertService = alertService;
         this.loading = false;
         this.submitted = false;
     }
     LoginComponent.prototype.ngOnInit = function () {
         // get return url from route parameters or default to '/'
-        this.returnUrl = this._activateRoute.snapshot.queryParams['returnUrl'] || '/profile';
+        this.returnUrl = this._activateRoute.snapshot.queryParams['returnUrl'] || '/';
+        console.log('this.url : ', this.returnUrl);
         this.loginForm = this.formBuilder.group({
             emailMobile: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             password: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].minLength(6)]],
@@ -795,6 +955,8 @@ var LoginComponent = /** @class */ (function () {
         this.forgotPasswordForm = this.formBuilder.group({
             email: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]
         });
+        // reset login status
+        this.authenticationService.logout();
         jquery__WEBPACK_IMPORTED_MODULE_5__(document).ready(function () {
             jquery__WEBPACK_IMPORTED_MODULE_5__('#forgotPWFrm').hide();
             jquery__WEBPACK_IMPORTED_MODULE_5__('#forgot').click(function () {
@@ -804,24 +966,32 @@ var LoginComponent = /** @class */ (function () {
             });
         });
     };
-    LoginComponent.prototype.onLogin = function () {
+    Object.defineProperty(LoginComponent.prototype, "f", {
+        // convenience getter for easy access to form fields
+        get: function () { return this.loginForm.controls; },
+        enumerable: true,
+        configurable: true
+    });
+    LoginComponent.prototype.onSubmit = function () {
         var _this = this;
-        console.log(this.loginForm.value);
         this.submitted = true;
-        // console.log(this.registerForm.value);
         // stop here if form is invalid
         if (this.loginForm.invalid) {
             return;
         }
         this.loading = true;
-        this._service.login(this.loginForm.value.emailMobile, this.loginForm.value.password).subscribe(function (userData) {
-            if (userData != null) {
+        this.authenticationService.login(this.f.emailMobile.value, this.f.password.value)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["first"])())
+            .subscribe(function (userData) {
+            console.log('userData : ', userData);
+            if (userData == null) {
+                console.log('this message');
+                _this.message = 'Email / Mobile & password is incorrect';
             }
-            console.log('Login successful :: ', userData);
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-            _this._router.navigate([_this.returnUrl]);
-            // this.alertService.success('Registration successful', true);
-            // this.router.navigate(['/login']);
+            else {
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                _this._router.navigate(['profile']);
+            }
         }, function (error) {
             _this.alertService.error(error);
             _this.loading = false;
@@ -841,10 +1011,10 @@ var LoginComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./login.component.html */ "./src/app/pages/login/login.component.html"),
             styles: [__webpack_require__(/*! ./login.component.css */ "./src/app/pages/login/login.component.css")]
         }),
-        __metadata("design:paramtypes", [_app_services_kongu_service__WEBPACK_IMPORTED_MODULE_1__["KonguService"],
+        __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
+            _services_authentication_service__WEBPACK_IMPORTED_MODULE_1__["AuthenticationService"],
             _services_alert_service__WEBPACK_IMPORTED_MODULE_4__["AlertService"]])
     ], LoginComponent);
     return LoginComponent;
@@ -872,7 +1042,7 @@ module.exports = "/*!\n * Bootstrap v3.4.1 (https://getbootstrap.com/)\n * Copyr
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- inner banner -->\n<div class=\"inner_banner layer\" id=\"home\">\n  <div class=\"container\">\n    <div class=\"agileinfo-inner\">\n      <h2 class=\"text-center text-white\">\n        About Us\n      </h2>\n    </div>\n  </div>\n</div>\n<!-- //inner banner -->\n\n<!-- header -->\n<header>\n  <div class=\"container\">\n    <!-- top header -->\n    <app-header></app-header>\n    <!-- top header -->\n  </div>\n</header>\n<br>\n<br>\n<br>\n<br><br>\n<br>\n<div class=\"container\" id=\"settings\">\n  <h2>My Profile</h2>\n  <hr>\n  <form class=\"form\" action=\"##\" method=\"post\" id=\"registrationForm\" (ngSubmit)=\"profileUpdate()\">\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"first_name\">\n          <h4>First name</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"first_name\" id=\"first_name\" placeholder=\"first name\"\n          title=\"enter your first name if any.\">\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"last_name\">\n          <h4>Last name</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"last_name\" id=\"last_name\" placeholder=\"last name\"\n          title=\"enter your last name if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"mobile\">\n          <h4>Mobile</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"mobile\" id=\"mobile\" placeholder=\"enter mobile number\"\n          title=\"enter your mobile number if any.\">\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"email\">\n          <h4>Email</h4>\n        </label>\n        <input type=\"email\" class=\"form-control\" name=\"email\" id=\"email\" placeholder=\"you@email.com\"\n          title=\"enter your email.\">\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"email\">\n          <h4>Address</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" id=\"address\" placeholder=\"somewhere\" title=\"enter a address\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"height\">\n          <h4>Height</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"height\" id=\"height\" placeholder=\"enter height\"\n          title=\"enter your height number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"weight\">\n          <h4>Weight</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"weight\" id=\"weight\" placeholder=\"enter weight\"\n          title=\"enter your weight number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"bodytype\">\n          <h4>Body Type</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"bodytype\" id=\"bodytype\" placeholder=\"enter Body Type\"\n          title=\"enter your Body Type number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"foodhabits\">\n          <h4>Food Habits</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"foodhabits\" id=\"foodhabits\" placeholder=\"enter Food Habits\"\n          title=\"enter your Food Habits number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"kuladeivamPlace\">\n          <h4>Kuladeivam & Place</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"KuladeivamPlace\" id=\"KuladeivamPlace\"\n          placeholder=\"enter Kuladeivam & Place\" title=\"enter your Kuladeivam & Place if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"kootam\">\n          <h4>Kootam</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"kootam\" id=\"kootam\" placeholder=\"enter Kootam\"\n          title=\"enter your Kootam if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"education\">\n          <h4>Education</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"education\" id=\"education\" placeholder=\"enter education\"\n          title=\"enter your education if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"occupation\">\n          <h4>Occupation</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"occupation\" id=\"occupation\" placeholder=\"enter occupation\"\n          title=\"enter your occupation if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"currentCity\">\n          <h4>City</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"currentCity\" id=\"currentCity\" placeholder=\"enter Current City\"\n          title=\"enter your Current City if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"maritalStatus\">\n          <h4>Marital Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"maritalStatus\" id=\"maritalStatus\"\n          placeholder=\"enter Marital Status\" title=\"enter your Marital Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"noOfChildren\">\n          <h4>No Of Children</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"noOfChildren\" id=\"noOfChildren\" placeholder=\"enter No Of Children\"\n          title=\"enter your No Of Children if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"familyType\">\n          <h4>Family Type</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"familyType\" id=\"familyType\" placeholder=\"enter Family Type\"\n          title=\"enter your Family Type if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"familyStatus\">\n          <h4>Family Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"familyStatus\" id=\"familyStatus\" placeholder=\"enter Family Status\"\n          title=\"enter your Family Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"familyValues\">\n          <h4>Family Values</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"familyValues\" id=\"familyValues\" placeholder=\"enter Family Values\"\n          title=\"enter your Family Values if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"physicalStatus\">\n          <h4>Physical Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"physicalStatus\" id=\"physicalStatus\"\n          placeholder=\"enter Physical Status\" title=\"enter your Physical Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"annualIncome\">\n          <h4>Annual Income</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"annualIncome\" id=\"annualIncome\" placeholder=\"enter Annual Income\"\n          title=\"enter your Annual Income if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"prefferedLocation\">\n          <h4>Preffered Location</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"prefferedLocation\" id=\"prefferedLocation\"\n          placeholder=\"enter Preffered Location\" title=\"enter your Preffered Location if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"noOfSiblings\">\n          <h4>No Of Siblings</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"noOfSiblings\" id=\"noOfSiblings\" placeholder=\"enter No Of Siblings\"\n          title=\"enter your No Of Siblings if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"siblingsMaritalStatus\">\n          <h4>Siblings Marital Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"siblingsMaritalStatus\" id=\"siblingsMaritalStatus\"\n          placeholder=\"enter Siblings Marital Status\" title=\"enter your Siblings Marital Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"fatherOccupation\">\n          <h4>Father Occupation</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"fatherOccupation\" id=\"fatherOccupation\"\n          placeholder=\"enter Father Occupation\" title=\"enter your Father Occupation if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"fatherContactNo\">\n          <h4>Father Contact No</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"fatherContactNo\" id=\"fatherContactNo\"\n          placeholder=\"enter Father Contact No\" title=\"enter your Father Contact No if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"imagePaths\">\n          <h4>Image Paths</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"imagePaths\" id=\"imagePaths\" placeholder=\"enter Image Paths\"\n          title=\"enter your Image Paths if any.\">\n      </div>\n    </div>\n\n    <!-- <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"password\">\n          <h4>Password</h4>\n        </label>\n        <input type=\"password\" class=\"form-control\" name=\"password\" id=\"password\" placeholder=\"password\"\n          title=\"enter your password.\">\n      </div>\n    </div>\n    <div class=\"form-group\">\n\n      <div class=\"col-xs-4\">\n        <label for=\"password2\">\n          <h4>Verify</h4>\n        </label>\n        <input type=\"password\" class=\"form-control\" name=\"password2\" id=\"password2\" placeholder=\"password2\"\n          title=\"enter your password2.\">\n      </div>\n    </div> -->\n    <div class=\"form-group\">\n      <div class=\"col-xs-12\">\n        <br>\n        <button class=\"btn btn-lg btn-success\" type=\"submit\"><i class=\"glyphicon glyphicon-ok-sign\"></i> Save</button>\n        <button class=\"btn btn-lg\" type=\"reset\"><i class=\"glyphicon glyphicon-repeat\"></i> Reset</button>\n      </div>\n    </div>\n  </form>\n</div>"
+module.exports = "<!-- header -->\n<header>\n  <div class=\"container\">\n    <!-- top header -->\n    <app-header></app-header>\n    <!-- top header -->\n  </div>\n</header>\n\n<!-- inner banner -->\n<div class=\"inner_banner layer\" id=\"home\">\n  <div class=\"container\">\n    <div class=\"agileinfo-inner\">\n      <h2 class=\"text-center text-white\">\n        My Profile\n      </h2>\n    </div>\n  </div>\n</div>\n<!-- //inner banner -->\n\n<div class=\"container\" id=\"settings\">\n  <hr>\n  <form class=\"form\" action=\"##\" method=\"post\" id=\"registrationForm\" (ngSubmit)=\"profileUpdate()\">\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"first_name\">\n          <h4>First name</h4>\n        </label><br>\n        <label>{{currentUser.firstname}}</label>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"last_name\">\n          <h4>Last name</h4>\n        </label>\n        <br>\n        <label>{{currentUser.lastname}}</label>\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"mobile\">\n          <h4>Mobile</h4>\n        </label>\n        <br>\n        <label>{{currentUser.mobile}}</label>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"email\">\n          <h4>Email</h4>\n        </label>\n        <br>\n        <label>{{currentUser.email}}</label>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"email\">\n          <h4>Address</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" id=\"address\" placeholder=\"somewhere\" title=\"enter a address\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"height\">\n          <h4>Height</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"height\" id=\"height\" placeholder=\"enter height\"\n          title=\"enter your height number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"weight\">\n          <h4>Weight</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"weight\" id=\"weight\" placeholder=\"enter weight\"\n          title=\"enter your weight number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"bodytype\">\n          <h4>Body Type</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"bodytype\" id=\"bodytype\" placeholder=\"enter Body Type\"\n          title=\"enter your Body Type number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"foodhabits\">\n          <h4>Food Habits</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"foodhabits\" id=\"foodhabits\" placeholder=\"enter Food Habits\"\n          title=\"enter your Food Habits number if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"kuladeivamPlace\">\n          <h4>Kuladeivam & Place</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"KuladeivamPlace\" id=\"KuladeivamPlace\"\n          placeholder=\"enter Kuladeivam & Place\" title=\"enter your Kuladeivam & Place if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"kootam\">\n          <h4>Kootam</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"kootam\" id=\"kootam\" placeholder=\"enter Kootam\"\n          title=\"enter your Kootam if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"education\">\n          <h4>Education</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"education\" id=\"education\" placeholder=\"enter education\"\n          title=\"enter your education if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"occupation\">\n          <h4>Occupation</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"occupation\" id=\"occupation\" placeholder=\"enter occupation\"\n          title=\"enter your occupation if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"currentCity\">\n          <h4>City</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"currentCity\" id=\"currentCity\" placeholder=\"enter Current City\"\n          title=\"enter your Current City if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"maritalStatus\">\n          <h4>Marital Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"maritalStatus\" id=\"maritalStatus\"\n          placeholder=\"enter Marital Status\" title=\"enter your Marital Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"noOfChildren\">\n          <h4>No Of Children</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"noOfChildren\" id=\"noOfChildren\" placeholder=\"enter No Of Children\"\n          title=\"enter your No Of Children if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"familyType\">\n          <h4>Family Type</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"familyType\" id=\"familyType\" placeholder=\"enter Family Type\"\n          title=\"enter your Family Type if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"familyStatus\">\n          <h4>Family Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"familyStatus\" id=\"familyStatus\" placeholder=\"enter Family Status\"\n          title=\"enter your Family Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"familyValues\">\n          <h4>Family Values</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"familyValues\" id=\"familyValues\" placeholder=\"enter Family Values\"\n          title=\"enter your Family Values if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"physicalStatus\">\n          <h4>Physical Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"physicalStatus\" id=\"physicalStatus\"\n          placeholder=\"enter Physical Status\" title=\"enter your Physical Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"annualIncome\">\n          <h4>Annual Income</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"annualIncome\" id=\"annualIncome\" placeholder=\"enter Annual Income\"\n          title=\"enter your Annual Income if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"prefferedLocation\">\n          <h4>Preffered Location</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"prefferedLocation\" id=\"prefferedLocation\"\n          placeholder=\"enter Preffered Location\" title=\"enter your Preffered Location if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"noOfSiblings\">\n          <h4>No Of Siblings</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"noOfSiblings\" id=\"noOfSiblings\" placeholder=\"enter No Of Siblings\"\n          title=\"enter your No Of Siblings if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"siblingsMaritalStatus\">\n          <h4>Siblings Marital Status</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"siblingsMaritalStatus\" id=\"siblingsMaritalStatus\"\n          placeholder=\"enter Siblings Marital Status\" title=\"enter your Siblings Marital Status if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"fatherOccupation\">\n          <h4>Father Occupation</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"fatherOccupation\" id=\"fatherOccupation\"\n          placeholder=\"enter Father Occupation\" title=\"enter your Father Occupation if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"fatherContactNo\">\n          <h4>Father Contact No</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"fatherContactNo\" id=\"fatherContactNo\"\n          placeholder=\"enter Father Contact No\" title=\"enter your Father Contact No if any.\">\n      </div>\n    </div>\n\n    <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"imagePaths\">\n          <h4>Image Paths</h4>\n        </label>\n        <input type=\"text\" class=\"form-control\" name=\"imagePaths\" id=\"imagePaths\" placeholder=\"enter Image Paths\"\n          title=\"enter your Image Paths if any.\">\n      </div>\n    </div>\n\n    <!-- <div class=\"form-group\">\n      <div class=\"col-xs-4\">\n        <label for=\"password\">\n          <h4>Password</h4>\n        </label>\n        <input type=\"password\" class=\"form-control\" name=\"password\" id=\"password\" placeholder=\"password\"\n          title=\"enter your password.\">\n      </div>\n    </div>\n    <div class=\"form-group\">\n\n      <div class=\"col-xs-4\">\n        <label for=\"password2\">\n          <h4>Verify</h4>\n        </label>\n        <input type=\"password\" class=\"form-control\" name=\"password2\" id=\"password2\" placeholder=\"password2\"\n          title=\"enter your password2.\">\n      </div>\n    </div> -->\n    <div class=\"form-group\">\n      <div class=\"col-lg-12  ml-auto\">\n        <br>\n        <button class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" type=\"submit\"><i\n            class=\"glyphicon glyphicon-ok-sign\"></i>\n          <p style=\"color:#feed01;\">Save</p>\n        </button>\n        <button class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" type=\"reset\"><i\n            class=\"glyphicon glyphicon-repeat\"></i>\n          <p style=\"color:#feed01;\">Reset</p>\n        </button>\n      </div>\n    </div>\n  </form>\n</div>"
 
 /***/ }),
 
@@ -938,7 +1108,7 @@ module.exports = "/** test */\n/*# sourceMappingURL=data:application/json;base64
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"lregister-form\">\n  <div id=\"regForm\">\n    <h5 class=\"modal-title text-uppercase\">Register</h5>\n    <form [formGroup]=\"registerForm\" (ngSubmit)=\"onRegister()\" class=\"px-3 pt-3 pb-0\">\n      <div class=\"form-group\">\n        <label for=\"firstName\" class=\"col-form-label\">First Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"firstName\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.firstName.errors }\" />\n        <div *ngIf=\"submitted && f.firstName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.firstName.errors.required\">First Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Last Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"lastName\" id=\"recipient-name3\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.lastName.errors }\" />\n        <div *ngIf=\"submitted && f.lastName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.lastName.errors.required\">Last Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Email id</label>\n        <input type=\"email\" class=\"form-control\" placeholder=\"\" formControlName=\"email\" id=\"recipient-name4\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.email.errors }\" />\n        <div *ngIf=\"submitted && f.email.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.email.errors.required\">Email Id is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Mobile Number</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"mobile\" id=\"recipient-name5\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.mobile.errors }\" />\n        <div *ngIf=\"submitted && f.mobile.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.mobile.errors.required\">Mobile Number is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name1\" class=\"col-form-label\">Password</label>\n        <input type=\"password\" class=\"form-control\" placeholder=\"\" formControlName=\"password\" id=\"recipient-name6\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n        <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.password.errors.required\">Password is required</div>\n          <div *ngIf=\"f.password.errors.minlength\">Password must be at least 6 characters</div>\n        </div>\n      </div>\n      <div class=\"right-w3l\">\n        <input type=\"submit\" class=\"form-control\" value=\"Get Started\" />\n      </div>\n    </form>\n  </div>\n\n  <div id=\"agreeForm\">\n    <form [formGroup]=\"agreeForm\" (ngSubmit)=\"onRegister()\" class=\"px-3 pt-3 pb-0\">\n      <h5 class=\"modal-title text-uppercase\">Terms and Conditions</h5>\n      <div class=\"right-w3l\">\n        <div style=\"border: 1px solid #e5e5e5; width: 450px; height: 350px; overflow: auto; padding: 10px;\">\n          <p>All information received by us from your registration on business-standard.com or other digital products\n            of Business Standard will be used by Business Standard in accordance with our Privacy Policy. Kindly\n            read the below mentioned details.</p>\n          <p>On registration, we expect you to provide Business Standard with an accurate and complete information of\n            the compulsory fields. We also expect you to keep the information secure, specifically access passwords\n            and payment information. Kindly update the information periodically to keep your account relevant.\n            Business Standard will rely on any information you provide to us.</p>\n          <p>Each registration is for a single user only. On registration, you will choose a user name and\n            password (\"ID\"). You are not allowed to share your ID or give access to your account to anyone else.\n            Business Standard Premium subscription does not allow multiple users on a network or within an organization\n            to use the same ID.</p>\n          <p>Eum ea quidam oportere imperdiet, facer oportere vituperatoribus eu vix, mea ei iisque legendos hendrerit.\n            Blandit comprehensam eu his, ad eros veniam ridens eum. Id odio lobortis elaboraret pro. Vix te fabulas\n            partiendo.</p>\n          <p>Natum oportere et qui, vis graeco tincidunt instructior an, autem elitr noster per et. Mea eu mundi\n            qualisque. Quo nemore nusquam vituperata et, mea ut abhorreant deseruisse, cu nostrud postulant dissentias\n            qui. Postea tincidunt vel eu.</p>\n          <p>Ad eos alia inermis nominavi, eum nibh docendi definitionem no. Ius eu stet mucius nonumes, no mea facilis\n            philosophia necessitatibus. Te eam vidit iisque legendos, vero meliore deserunt ius ea. An qui inimicus\n            inciderint.</p>\n        </div><br>\n        <!-- <input type=\"submit\" class=\"form-control\" value=\"Next\" /> -->\n        <div class=\"form-group\">\n          <div class=\"col-xs-6 col-xs-offset-3\">\n            <div class=\"radio\">\n              <label>\n                <input type=\"radio\" name=\"agree\" value=\"agree\" (click)=\"agreeCall()\" /> Agree\n                with the terms and\n                conditions\n              </label>\n            </div>\n            <div class=\"radio\">\n              <label>\n                <input type=\"radio\" name=\"agree\" value=\"disagree\" (click)=\"closeAgreePopup();\" /> DisAgree\n              </label>\n            </div>\n          </div>\n        </div>\n        <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" id=\"next\">Next</a>\n      </div>\n    </form>\n  </div>\n\n  <div id=\"paymentFrm\">\n    <h5 class=\"modal-title text-uppercase\">Payment</h5>\n    <div class=\"px-3 pt-3 pb-0\">\n      <!-- <input type=\"submit\" class=\"form-control\" value=\"Complete\" /> -->\n      <div class=\"form-group\">\n        <label for=\"plan\" class=\"col-form-label\">Select a Plan</label>\n        <select class=\"form-control\">\n          <option value=\"\">Select a Plan</option>\n          <option value=\"silver\">Silver</option>\n          <option value=\"gold\">Gold</option>\n          <option value=\"platinum\">Platinum</option>\n        </select>\n      </div>\n      <!-- <div class=\"col-xs-6 col-xs-offset-3\"> -->\n      <div class=\"col-sm-8\">\n        <label>\n          <input type=\"radio\" name=\"paymentMode\" (click)=\"onLine()\" value=\"online\" /> Online\n        </label>&nbsp;&nbsp;&nbsp;\n        <label>\n          <input type=\"radio\" name=\"paymentMode\" (click)=\"offLine()\" value=\"offline\" />\n          Offline\n        </label>\n      </div>\n      <div class=\"form-group\">\n\n      </div>\n      <!-- </div> -->\n      <div id=\"offlineForm\">\n        <form [formGroup]=\"paymentForm\">\n          <div class=\"form-group\">\n            <label for=\"chequeNumber\" class=\"col-form-label\">Cheque number</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"chequeNumber\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.chequeNumber }\" />\n            <div *ngIf=\"submitted && f.chequeNumber\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.chequeNumber.required\">Cheque Number is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"bankName\" class=\"col-form-label\">Bank Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"bankName\" id=\"bankName\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.bankName}\" />\n            <div *ngIf=\"submitted && f.bankName\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.bankName.required\">Bank Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"branchName\" class=\"col-form-label\">Branch Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"branchName\" id=\"branchName\"\n              required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.branchName }\" />\n            <div *ngIf=\"submitted && f.branchName\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.branchName.required\">Branch Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"amount\" class=\"col-form-label\">Amount</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"amount\" id=\"amount\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.amount }\" />\n            <div *ngIf=\"submitted && f.amount\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.amount.required\">Amount is required</div>\n            </div>\n          </div>\n\n          <div class=\"right-w3l\">\n            <input type=\"submit\" class=\"form-control\" value=\"Finish\" />\n          </div>\n        </form>\n      </div>\n      <!-- <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" href=\"home#\"\n        id=\"finish\">Finish</a> -->\n    </div>\n  </div>\n</div>\n<a class=\"close\" (click)=\"close()\" id=\"closeBtn\" href=\"home#\">&times;</a>"
+module.exports = "<div class=\"lregister-form\">\n  <div id=\"regForm\">\n    <h5 class=\"modal-title text-uppercase\">Register</h5>\n    <form [formGroup]=\"registerForm\" (ngSubmit)=\"onRegister(registerForm.value)\" class=\"px-3 pt-3 pb-0\">\n      <div class=\"form-group\">\n        <label for=\"firstName\" class=\"col-form-label\">First Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"firstName\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.firstName.errors }\" />\n        <div *ngIf=\"submitted && f.firstName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.firstName.errors.required\">First Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Last Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"lastName\" id=\"recipient-name3\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.lastName.errors }\" />\n        <div *ngIf=\"submitted && f.lastName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.lastName.errors.required\">Last Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Email id</label>\n        <input type=\"email\" class=\"form-control\" placeholder=\"\" formControlName=\"email\" id=\"recipient-name4\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.email.errors }\" />\n        <div *ngIf=\"submitted && f.email.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.email.errors.required\">Email Id is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Mobile Number</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"mobile\" id=\"recipient-name5\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.mobile.errors }\" />\n        <div *ngIf=\"submitted && f.mobile.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.mobile.errors.required\">Mobile Number is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name1\" class=\"col-form-label\">Password</label>\n        <input type=\"password\" class=\"form-control\" placeholder=\"\" formControlName=\"password\" id=\"recipient-name6\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n        <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.password.errors.required\">Password is required</div>\n          <div *ngIf=\"f.password.errors.minlength\">Password must be at least 6 characters</div>\n        </div>\n      </div>\n      <div class=\"right-w3l\">\n        <input type=\"submit\" class=\"form-control\" value=\"Get Started\" />\n      </div>\n    </form>\n  </div>\n\n  <div id=\"agreeForm\">\n    <form [formGroup]=\"agreeForm\" (ngSubmit)=\"onRegister()\" class=\"px-3 pt-3 pb-0\">\n      <h5 class=\"modal-title text-uppercase\">Terms and Conditions</h5>\n      <div class=\"right-w3l\">\n        <div style=\"border: 1px solid #e5e5e5; width: 450px; height: 350px; overflow: auto; padding: 10px;\">\n          <p>All information received by us from your registration on business-standard.com or other digital products\n            of Business Standard will be used by Business Standard in accordance with our Privacy Policy. Kindly\n            read the below mentioned details.</p>\n          <p>On registration, we expect you to provide Business Standard with an accurate and complete information of\n            the compulsory fields. We also expect you to keep the information secure, specifically access passwords\n            and payment information. Kindly update the information periodically to keep your account relevant.\n            Business Standard will rely on any information you provide to us.</p>\n          <p>Each registration is for a single user only. On registration, you will choose a user name and\n            password (\"ID\"). You are not allowed to share your ID or give access to your account to anyone else.\n            Business Standard Premium subscription does not allow multiple users on a network or within an organization\n            to use the same ID.</p>\n          <p>Eum ea quidam oportere imperdiet, facer oportere vituperatoribus eu vix, mea ei iisque legendos hendrerit.\n            Blandit comprehensam eu his, ad eros veniam ridens eum. Id odio lobortis elaboraret pro. Vix te fabulas\n            partiendo.</p>\n          <p>Natum oportere et qui, vis graeco tincidunt instructior an, autem elitr noster per et. Mea eu mundi\n            qualisque. Quo nemore nusquam vituperata et, mea ut abhorreant deseruisse, cu nostrud postulant dissentias\n            qui. Postea tincidunt vel eu.</p>\n          <p>Ad eos alia inermis nominavi, eum nibh docendi definitionem no. Ius eu stet mucius nonumes, no mea facilis\n            philosophia necessitatibus. Te eam vidit iisque legendos, vero meliore deserunt ius ea. An qui inimicus\n            inciderint.</p>\n          <hr>\n          <div class=\"form-group\">\n            <div class=\"col-xs-6 col-xs-offset-3\">\n              <div class=\"radio\">\n                <label>\n                  <input type=\"radio\" name=\"agreementFlag\" (click)=\"agreeCall($event)\" /> Agreed\n                  <!-- with the terms and conditions -->\n                </label>\n              </div>\n              <div class=\"radio\">\n                <label>\n                  <input type=\"radio\" name=\"agree\" value=\"disagree\" (click)=\"closeAgreePopup();\" /> DisAgree\n                </label>\n              </div>\n            </div>\n          </div>\n\n        </div><br>\n        <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" id=\"next\">Next</a>\n      </div>\n    </form>\n  </div>\n\n  <div id=\"paymentFrm\">\n    <h5 class=\"modal-title text-uppercase\">Payment</h5>\n    <div class=\"px-3 pt-3 pb-0\">\n      <!-- <input type=\"submit\" class=\"form-control\" value=\"Complete\" /> -->\n      <div class=\"form-group\">\n        <label for=\"plan\" class=\"col-form-label\">Select a Plan</label>\n        <select class=\"form-control\">\n          <option value=\"\">Select a Plan</option>\n          <option value=\"silver\">Silver</option>\n          <option value=\"gold\">Gold</option>\n          <option value=\"platinum\">Platinum</option>\n        </select>\n      </div>\n      <!-- <div class=\"col-xs-6 col-xs-offset-3\"> -->\n      <div class=\"col-sm-8\">\n        <label>\n          <input type=\"radio\" name=\"paymentMode\" (click)=\"onLine()\" value=\"online\" /> Online\n        </label>&nbsp;&nbsp;&nbsp;\n        <label>\n          <input type=\"radio\" name=\"paymentMode\" (click)=\"offLine()\" value=\"offline\" />\n          Offline\n        </label>\n      </div>\n      <div class=\"form-group\">\n\n      </div>\n      <!-- </div> -->\n      <div id=\"offlineForm\">\n        <form [formGroup]=\"paymentForm\" (ngSubmit)=\"paymentSubmit(paymentForm.value)\">\n          <div class=\"form-group\">\n            <label for=\"chequeNumber\" class=\"col-form-label\">Cheque number</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"chequeNumber\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.chequeNumber }\" />\n            <div *ngIf=\"submitted && f.chequeNumber\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.chequeNumber.required\">Cheque Number is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"bankName\" class=\"col-form-label\">Bank Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"bankName\" id=\"bankName\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.bankName}\" />\n            <div *ngIf=\"submitted && f.bankName\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.bankName.required\">Bank Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"branchName\" class=\"col-form-label\">Branch Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"branchName\" id=\"branchName\"\n              required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.branchName }\" />\n            <div *ngIf=\"submitted && f.branchName\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.branchName.required\">Branch Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"amount\" class=\"col-form-label\">Amount</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"amount\" id=\"amount\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.amount }\" />\n            <div *ngIf=\"submitted && f.amount\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.amount.required\">Amount is required</div>\n            </div>\n          </div>\n\n          <div class=\"right-w3l\">\n            <input type=\"submit\" class=\"form-control\" value=\"Finish\" />\n          </div>\n        </form>\n      </div>\n      <!-- <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" href=\"home#\"\n        id=\"finish\">Finish</a> -->\n    </div>\n  </div>\n</div>\n<a class=\"close\" (click)=\"close()\" id=\"closeBtn\" href=\"home#\">&times;</a>"
 
 /***/ }),
 
@@ -981,12 +1151,8 @@ var RegisterComponent = /** @class */ (function () {
         this.router = router;
         this.loading = false;
         this.submitted = false;
+        this.jsonObject = {};
     }
-    RegisterComponent.prototype.singUp = function (formValue) {
-    };
-    // onAboutButton(): void {
-    //   this._router.navigate(['/about']);
-    // }
     RegisterComponent.prototype.ngOnInit = function () {
         this.registerForm = this.formBuilder.group({
             firstName: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
@@ -1027,7 +1193,7 @@ var RegisterComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    RegisterComponent.prototype.onRegister = function () {
+    RegisterComponent.prototype.onRegister = function (formValue) {
         this.submitted = true;
         // console.log(this.registerForm.value);
         // stop here if form is invalid
@@ -1038,7 +1204,14 @@ var RegisterComponent = /** @class */ (function () {
         jquery__WEBPACK_IMPORTED_MODULE_4__('#next').hide();
         jquery__WEBPACK_IMPORTED_MODULE_4__('#regForm').hide();
         this.close();
-        this.loading = true;
+        this.jsonObject = JSON.stringify(formValue);
+        console.log(this.jsonObject);
+    };
+    RegisterComponent.prototype.paymentSubmit = function (paymentFormValue) {
+        var paymentJSON = JSON.stringify(paymentFormValue);
+        console.log(paymentJSON);
+        this.jsonObject.concat(paymentJSON);
+        console.log(this.jsonObject);
         // this._service.register(this.registerForm.value).subscribe(
         //   data => {
         //     console.log('Registration successful');
@@ -1070,7 +1243,9 @@ var RegisterComponent = /** @class */ (function () {
             agree: ''
         });
     };
-    RegisterComponent.prototype.agreeCall = function () {
+    RegisterComponent.prototype.agreeCall = function (event) {
+        console.log(event.target.checked);
+        // console.log(this.jsonObject);
         jquery__WEBPACK_IMPORTED_MODULE_4__('#next').show();
     };
     RegisterComponent.prototype.onLine = function () {
