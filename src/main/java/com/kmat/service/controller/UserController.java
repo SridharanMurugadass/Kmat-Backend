@@ -22,6 +22,7 @@ import com.kmat.service.repository.UserRepo;
 import com.kmat.service.utils.HashingService;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -157,16 +158,16 @@ public class UserController {
 	public User save(@RequestBody String json) throws ParseException {
 		
 		JSONParser parser = new JSONParser(); 
-		JSONObject data = (JSONObject) parser.parse(json);
+		JSONArray data = (JSONArray) parser.parse(json);
+		JSONObject Obj1 = (JSONObject) data.get(0);
 		
-		JSONObject Obj1 = (JSONObject) data.get("register");
-		JSONObject Obj2 = (JSONObject) data.get("payment");
+		JSONObject register = (JSONObject) Obj1.get("register");
+		JSONObject payment = (JSONObject) Obj1.get("payment");
 		
-		Obj1.putAll(Obj2);
+		register.putAll(payment);
 		
 		RestTemplate restTemplate = new RestTemplate();
-	    User usr = restTemplate.postForObject( "https://kmat.herokuapp.com/signUp", Obj1, User.class);
-		
+	    User usr = restTemplate.postForObject( "https://kmat.herokuapp.com/signUp", register, User.class);
 		
 		return usr;
 	}
