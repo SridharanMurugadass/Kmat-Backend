@@ -165,7 +165,7 @@ public class UserController {
 		Obj1.putAll(Obj2);
 		
 		RestTemplate restTemplate = new RestTemplate();
-	    User usr = restTemplate.postForObject( "http://localhost:8080/signUp", Obj1, User.class);
+	    User usr = restTemplate.postForObject( "https://kmat.herokuapp.com/signUp", Obj1, User.class);
 		
 		
 		return usr;
