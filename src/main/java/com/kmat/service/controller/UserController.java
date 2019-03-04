@@ -159,10 +159,8 @@ public class UserController {
 		
 		JSONParser parser = new JSONParser(); 
 		JSONArray data = (JSONArray) parser.parse(json);
-		JSONObject Obj1 = (JSONObject) data.get(0);
-		
-		JSONObject register = (JSONObject) Obj1.get("register");
-		JSONObject payment = (JSONObject) Obj1.get("payment");
+		JSONObject register = (JSONObject) data.get(0);
+		JSONObject payment = (JSONObject) data.get(1);
 		
 		register.putAll(payment);
 		
