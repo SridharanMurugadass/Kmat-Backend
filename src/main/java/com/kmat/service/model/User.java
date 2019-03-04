@@ -13,6 +13,24 @@ public class User {
 	private String email;
 	private Date createdDate;
 	private String chequeNumber;
+	private String modeOfPayment;
+	public String getModeOfPayment() {
+		return modeOfPayment;
+	}
+
+	public void setModeOfPayment(String modeOfPayment) {
+		this.modeOfPayment = modeOfPayment;
+	}
+
+	public String getMembership() {
+		return membership;
+	}
+
+	public void setMembership(String membership) {
+		this.membership = membership;
+	}
+
+	private String membership;
 	public String getChequeNumber() {
 		return chequeNumber;
 	}

@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
 import com.kmat.service.model.User;
 import com.kmat.service.repository.UserRepo;
 import com.kmat.service.utils.HashingService;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 @RestController
 public class UserController {
@@ -33,7 +38,7 @@ public class UserController {
 
 	@CrossOrigin
 	@PostMapping("/signUp")
-	public String signUp(@RequestBody User user) {
+	public User signUp(@RequestBody User user) {
 
 		LOGGER.debug("email: {}, mobile: {}", user.getEmail(), user.getMobile());
 
@@ -45,7 +50,7 @@ public class UserController {
 
 		repo.save(user);
 
-		return "1003"; // registration success
+		return user; // registration success
 
 	}
 
@@ -145,5 +150,26 @@ public class UserController {
 
 		return null;
 	}
+	
+	
+	@CrossOrigin
+	@PostMapping("/saveData")
+	public User save(@RequestBody String json) throws ParseException {
+		
+		JSONParser parser = new JSONParser(); 
+		JSONObject data = (JSONObject) parser.parse(json);
+		
+		JSONObject Obj1 = (JSONObject) data.get("register");
+		JSONObject Obj2 = (JSONObject) data.get("payment");
+		
+		Obj1.putAll(Obj2);
+		
+		RestTemplate restTemplate = new RestTemplate();
+	    User usr = restTemplate.postForObject( "http://localhost:8080/signUp", Obj1, User.class);
+		
+		
+		return usr;
+	}
+	
 
 }
