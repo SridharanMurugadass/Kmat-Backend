@@ -352,12 +352,19 @@ var KonguService = /** @class */ (function () {
         this._http = _http;
         this.serviceURL = 'https://kmat.herokuapp.com';
     }
-    KonguService.prototype.register = function (user) {
-        return this._http.post(this.serviceURL + "/signUp", user);
+    KonguService.prototype.register = function (regJSON) {
+        console.log(regJSON);
+        return this._http.post(this.serviceURL + "/saveData", regJSON);
     };
     KonguService.prototype.login = function (userId, password) {
         console.log('Test data in service', userId, password);
         return this._http.post(this.serviceURL + "/signIn", { mobile: userId, password: password });
+    };
+    KonguService.prototype.emailCheckService = function (emailId) {
+        return this._http.get(this.serviceURL + "/emailCheck/" + emailId);
+    };
+    KonguService.prototype.mobileCheckService = function (mobile) {
+        return this._http.get(this.serviceURL + "/mobileCheck/" + mobile);
     };
     KonguService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({ providedIn: 'root' }),
@@ -1108,7 +1115,7 @@ module.exports = "/** test */\n/*# sourceMappingURL=data:application/json;base64
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"lregister-form\">\n  <div id=\"regForm\">\n    <h5 class=\"modal-title text-uppercase\">Register</h5>\n    <form [formGroup]=\"registerForm\" (ngSubmit)=\"onRegister(registerForm.value)\" class=\"px-3 pt-3 pb-0\">\n      <div class=\"form-group\">\n        <label for=\"firstName\" class=\"col-form-label\">First Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"firstName\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.firstName.errors }\" />\n        <div *ngIf=\"submitted && f.firstName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.firstName.errors.required\">First Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Last Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"lastName\" id=\"recipient-name3\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.lastName.errors }\" />\n        <div *ngIf=\"submitted && f.lastName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.lastName.errors.required\">Last Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Email id</label>\n        <input type=\"email\" class=\"form-control\" placeholder=\"\" formControlName=\"email\" id=\"recipient-name4\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.email.errors }\" />\n        <div *ngIf=\"submitted && f.email.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.email.errors.required\">Email Id is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Mobile Number</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"mobile\" id=\"recipient-name5\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.mobile.errors }\" />\n        <div *ngIf=\"submitted && f.mobile.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.mobile.errors.required\">Mobile Number is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name1\" class=\"col-form-label\">Password</label>\n        <input type=\"password\" class=\"form-control\" placeholder=\"\" formControlName=\"password\" id=\"recipient-name6\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n        <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.password.errors.required\">Password is required</div>\n          <div *ngIf=\"f.password.errors.minlength\">Password must be at least 6 characters</div>\n        </div>\n      </div>\n      <div class=\"right-w3l\">\n        <input type=\"submit\" class=\"form-control\" value=\"Get Started\" />\n      </div>\n    </form>\n  </div>\n\n  <div id=\"agreeForm\">\n    <form [formGroup]=\"agreeForm\" (ngSubmit)=\"onRegister()\" class=\"px-3 pt-3 pb-0\">\n      <h5 class=\"modal-title text-uppercase\">Terms and Conditions</h5>\n      <div class=\"right-w3l\">\n        <div style=\"border: 1px solid #e5e5e5; width: 450px; height: 350px; overflow: auto; padding: 10px;\">\n          <p>All information received by us from your registration on business-standard.com or other digital products\n            of Business Standard will be used by Business Standard in accordance with our Privacy Policy. Kindly\n            read the below mentioned details.</p>\n          <p>On registration, we expect you to provide Business Standard with an accurate and complete information of\n            the compulsory fields. We also expect you to keep the information secure, specifically access passwords\n            and payment information. Kindly update the information periodically to keep your account relevant.\n            Business Standard will rely on any information you provide to us.</p>\n          <p>Each registration is for a single user only. On registration, you will choose a user name and\n            password (\"ID\"). You are not allowed to share your ID or give access to your account to anyone else.\n            Business Standard Premium subscription does not allow multiple users on a network or within an organization\n            to use the same ID.</p>\n          <p>Eum ea quidam oportere imperdiet, facer oportere vituperatoribus eu vix, mea ei iisque legendos hendrerit.\n            Blandit comprehensam eu his, ad eros veniam ridens eum. Id odio lobortis elaboraret pro. Vix te fabulas\n            partiendo.</p>\n          <p>Natum oportere et qui, vis graeco tincidunt instructior an, autem elitr noster per et. Mea eu mundi\n            qualisque. Quo nemore nusquam vituperata et, mea ut abhorreant deseruisse, cu nostrud postulant dissentias\n            qui. Postea tincidunt vel eu.</p>\n          <p>Ad eos alia inermis nominavi, eum nibh docendi definitionem no. Ius eu stet mucius nonumes, no mea facilis\n            philosophia necessitatibus. Te eam vidit iisque legendos, vero meliore deserunt ius ea. An qui inimicus\n            inciderint.</p>\n          <hr>\n          <div class=\"form-group\">\n            <div class=\"col-xs-6 col-xs-offset-3\">\n              <div class=\"radio\">\n                <label>\n                  <input type=\"radio\" name=\"agreementFlag\" (click)=\"agreeCall($event)\" /> Agreed\n                  <!-- with the terms and conditions -->\n                </label>\n              </div>\n              <div class=\"radio\">\n                <label>\n                  <input type=\"radio\" name=\"agree\" value=\"disagree\" (click)=\"closeAgreePopup();\" /> DisAgree\n                </label>\n              </div>\n            </div>\n          </div>\n\n        </div><br>\n        <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" id=\"next\">Next</a>\n      </div>\n    </form>\n  </div>\n\n  <div id=\"paymentFrm\">\n    <h5 class=\"modal-title text-uppercase\">Payment</h5>\n    <div class=\"px-3 pt-3 pb-0\">\n      <!-- <input type=\"submit\" class=\"form-control\" value=\"Complete\" /> -->\n      <div class=\"form-group\">\n        <label for=\"plan\" class=\"col-form-label\">Select a Plan</label>\n        <select class=\"form-control\">\n          <option value=\"\">Select a Plan</option>\n          <option value=\"silver\">Silver</option>\n          <option value=\"gold\">Gold</option>\n          <option value=\"platinum\">Platinum</option>\n        </select>\n      </div>\n      <!-- <div class=\"col-xs-6 col-xs-offset-3\"> -->\n      <div class=\"col-sm-8\">\n        <label>\n          <input type=\"radio\" name=\"paymentMode\" (click)=\"onLine()\" value=\"online\" /> Online\n        </label>&nbsp;&nbsp;&nbsp;\n        <label>\n          <input type=\"radio\" name=\"paymentMode\" (click)=\"offLine()\" value=\"offline\" />\n          Offline\n        </label>\n      </div>\n      <div class=\"form-group\">\n\n      </div>\n      <!-- </div> -->\n      <div id=\"offlineForm\">\n        <form [formGroup]=\"paymentForm\" (ngSubmit)=\"paymentSubmit(paymentForm.value)\">\n          <div class=\"form-group\">\n            <label for=\"chequeNumber\" class=\"col-form-label\">Cheque number</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"chequeNumber\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.chequeNumber }\" />\n            <div *ngIf=\"submitted && f.chequeNumber\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.chequeNumber.required\">Cheque Number is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"bankName\" class=\"col-form-label\">Bank Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"bankName\" id=\"bankName\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.bankName}\" />\n            <div *ngIf=\"submitted && f.bankName\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.bankName.required\">Bank Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"branchName\" class=\"col-form-label\">Branch Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"branchName\" id=\"branchName\"\n              required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.branchName }\" />\n            <div *ngIf=\"submitted && f.branchName\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.branchName.required\">Branch Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"amount\" class=\"col-form-label\">Amount</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"amount\" id=\"amount\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && f.amount }\" />\n            <div *ngIf=\"submitted && f.amount\" class=\"invalid-feedback\">\n              <div *ngIf=\"f.amount.required\">Amount is required</div>\n            </div>\n          </div>\n\n          <div class=\"right-w3l\">\n            <input type=\"submit\" class=\"form-control\" value=\"Finish\" />\n          </div>\n        </form>\n      </div>\n      <!-- <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" href=\"home#\"\n        id=\"finish\">Finish</a> -->\n    </div>\n  </div>\n</div>\n<a class=\"close\" (click)=\"close()\" id=\"closeBtn\" href=\"home#\">&times;</a>"
+module.exports = "<div class=\"lregister-form\">\n  <div id=\"regForm\">\n    <h5 class=\"modal-title text-uppercase\">Register</h5>\n    <form [formGroup]=\"registerForm\" (ngSubmit)=\"onRegister(registerForm.value)\" class=\"px-3 pt-3 pb-0\">\n\n      <div class=\"form-group\">\n        <label for=\"firstName\" class=\"col-form-label\">First Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"firstName\" required=\"\"\n          [ngClass]=\"{ 'is-invalid': submitted && f.firstName.errors }\" />\n        <div *ngIf=\"submitted && f.firstName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.firstName.errors.required\">First Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Last Name</label>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"lastName\" id=\"recipient-name3\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.lastName.errors }\" />\n        <div *ngIf=\"submitted && f.lastName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.lastName.errors.required\">Last Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Email id</label>\n        <div *ngIf=\"emailUsed\" class=\"alert alert-danger\" role=\"alert\">Email id already used</div>\n        <input type=\"email\" class=\"form-control\" placeholder=\"\" formControlName=\"email\" (blur)=\"emailCheck($event)\"\n          id=\"recipient-name4\" required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.email.errors }\" />\n        <div *ngIf=\"submitted && f.email.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.email.errors.required\">Email Id is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name\" class=\"col-form-label\">Mobile Number</label>\n        <div *ngIf=\"mobileUsed\" class=\"alert alert-danger\" role=\"alert\">Mobile number already used</div>\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"mobile\" id=\"recipient-name5\"\n          (blur)=\"mobileCheck($event)\" required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.mobile.errors }\" />\n        <div *ngIf=\"submitted && f.mobile.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.mobile.errors.required\">Mobile Number is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"recipient-name1\" class=\"col-form-label\">Password</label>\n        <input type=\"password\" class=\"form-control\" placeholder=\"\" formControlName=\"password\" id=\"recipient-name6\"\n          required=\"\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n        <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.password.errors.required\">Password is required</div>\n          <div *ngIf=\"f.password.errors.minlength\">Password must be at least 6 characters</div>\n        </div>\n      </div>\n\n      <div class=\"right-w3l\">\n        <input type=\"submit\" class=\"form-control\" value=\"Get Started\" />\n      </div>\n    </form>\n  </div>\n\n  <div id=\"agreeForm\">\n    <form [formGroup]=\"agreeForm\" (ngSubmit)=\"onRegister()\" class=\"px-3 pt-3 pb-0\">\n      <h5 class=\"modal-title text-uppercase\">Terms and Conditions</h5>\n      <div class=\"right-w3l\">\n        <div style=\"border: 1px solid #e5e5e5; width: 450px; height: 350px; overflow: auto; padding: 10px;\">\n          <p>All information received by us from your registration on business-standard.com or other digital products\n            of Business Standard will be used by Business Standard in accordance with our Privacy Policy. Kindly\n            read the below mentioned details.</p>\n          <p>On registration, we expect you to provide Business Standard with an accurate and complete information of\n            the compulsory fields. We also expect you to keep the information secure, specifically access passwords\n            and payment information. Kindly update the information periodically to keep your account relevant.\n            Business Standard will rely on any information you provide to us.</p>\n          <p>Each registration is for a single user only. On registration, you will choose a user name and\n            password (\"ID\"). You are not allowed to share your ID or give access to your account to anyone else.\n            Business Standard Premium subscription does not allow multiple users on a network or within an organization\n            to use the same ID.</p>\n          <p>Eum ea quidam oportere imperdiet, facer oportere vituperatoribus eu vix, mea ei iisque legendos hendrerit.\n            Blandit comprehensam eu his, ad eros veniam ridens eum. Id odio lobortis elaboraret pro. Vix te fabulas\n            partiendo.</p>\n          <p>Natum oportere et qui, vis graeco tincidunt instructior an, autem elitr noster per et. Mea eu mundi\n            qualisque. Quo nemore nusquam vituperata et, mea ut abhorreant deseruisse, cu nostrud postulant dissentias\n            qui. Postea tincidunt vel eu.</p>\n          <p>Ad eos alia inermis nominavi, eum nibh docendi definitionem no. Ius eu stet mucius nonumes, no mea facilis\n            philosophia necessitatibus. Te eam vidit iisque legendos, vero meliore deserunt ius ea. An qui inimicus\n            inciderint.</p>\n          <hr>\n          <div class=\"form-group\">\n            <div class=\"col-xs-6 col-xs-offset-3\">\n              <div class=\"radio\">\n                <label>\n                  <input type=\"radio\" name=\"agreementFlag\" (click)=\"agreeCall($event)\" /> Agreed\n                  <!-- with the terms and conditions -->\n                </label>\n              </div>\n              <div class=\"radio\">\n                <label>\n                  <input type=\"radio\" name=\"agree\" value=\"disagree\" (click)=\"closeAgreePopup();\" /> DisAgree\n                </label>\n              </div>\n            </div>\n          </div>\n\n        </div><br>\n        <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" id=\"next\">Next</a>\n      </div>\n    </form>\n  </div>\n\n  <div id=\"paymentFrm\">\n    <h5 class=\"modal-title text-uppercase\">Payment</h5>\n    <div class=\"px-3 pt-3 pb-0\">\n      <form [formGroup]=\"paymentForm\" (ngSubmit)=\"paymentSubmit(paymentForm.value)\">\n        <!-- <input type=\"submit\" class=\"form-control\" value=\"Complete\" /> -->\n        <input type=\"hidden\" name=\"agreementFlag\" formControlName=\"agreementFlag\" />\n        <div class=\"form-group\">\n          <label for=\"plan\" class=\"col-form-label\">Select a Plan</label>\n          <select class=\"form-control\" name=\"membership\" formControlName=\"membership\">\n            <option value=\"\">Select a Membership</option>\n            <option value=\"silver\">Silver</option>\n            <option value=\"gold\">Gold</option>\n            <option value=\"platinum\">Platinum</option>\n          </select>\n        </div>\n        <!-- <div class=\"col-xs-6 col-xs-offset-3\"> -->\n        <div class=\"col-sm-8\">\n          <label>\n            <input type=\"radio\" name=\"modeOfPayment\" formControlName=\"modeOfPayment\" (click)=\"onLine()\"\n              value=\"online\" /> Online\n          </label>&nbsp;&nbsp;&nbsp;\n          <label>\n            <input type=\"radio\" name=\"modeOfPayment\" formControlName=\"modeOfPayment\" (click)=\"offLine()\"\n              value=\"offline\" />\n            Offline\n          </label>\n        </div>\n        <div class=\"form-group\">\n\n        </div>\n        <!-- </div> -->\n        <div id=\"offlineForm\">\n          <div class=\"form-group\">\n            <label for=\"chequeNumber\" class=\"col-form-label\">Cheque number</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"chequeNumber\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && p.chequeNumber.errors }\" />\n            <div *ngIf=\"submitted && p.chequeNumber.errors\" class=\"invalid-feedback\">\n              <div *ngIf=\"p.chequeNumber.errors.required\">Cheque Number is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"bankName\" class=\"col-form-label\">Bank Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"bankName\" id=\"bankName\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && p.bankName.errors}\" />\n            <div *ngIf=\"submitted && p.bankName.errors\" class=\"invalid-feedback\">\n              <div *ngIf=\"p.bankName.errors.required\">Bank Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"branchName\" class=\"col-form-label\">Branch Name</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"branchName\" id=\"branchName\"\n              required=\"\" [ngClass]=\"{ 'is-invalid': submitted && p.branchName.errors }\" />\n            <div *ngIf=\"submitted && p.branchName.errors\" class=\"invalid-feedback\">\n              <div *ngIf=\"p.branchName.errors.required\">Branch Name is required</div>\n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label for=\"amount\" class=\"col-form-label\">Amount</label>\n            <input type=\"text\" class=\"form-control\" placeholder=\"\" formControlName=\"amount\" id=\"amount\" required=\"\"\n              [ngClass]=\"{ 'is-invalid': submitted && p.amount.errors }\" />\n            <div *ngIf=\"submitted && p.amount.errors\" class=\"invalid-feedback\">\n              <div *ngIf=\"p.amount.errors.required\">Amount is required</div>\n            </div>\n          </div>\n\n          <div class=\"right-w3l\">\n            <input type=\"submit\" class=\"form-control\" value=\"Finish\" />\n          </div>\n        </div>\n        <!-- <a class=\"btn btn-info1 btn-lg-block w3ls-btn px-sm-4 px-3 text-capitalize mr-sm-2\" href=\"home#\"\n        id=\"finish\">Finish</a> -->\n      </form>\n    </div>\n  </div>\n</div>\n<a class=\"close\" (click)=\"close()\" id=\"closeBtn\" href=\"home#\">&times;</a>"
 
 /***/ }),
 
@@ -1126,8 +1133,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_services_kongu_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../app/_services/kongu.service */ "./src/app/_services/kongu.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _app_services_alert_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../app/_services/alert.service */ "./src/app/_services/alert.service.ts");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_5__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1142,16 +1150,20 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var RegisterComponent = /** @class */ (function () {
-    function RegisterComponent(_service, _activateRoute, _router, formBuilder, router) {
+    function RegisterComponent(_service, _activateRoute, _router, formBuilder, router, alertService) {
         this._service = _service;
         this._activateRoute = _activateRoute;
         this._router = _router;
         this.formBuilder = formBuilder;
         this.router = router;
+        this.alertService = alertService;
         this.loading = false;
         this.submitted = false;
         this.jsonObject = {};
+        this.emailUsed = false;
+        this.mobileUsed = false;
     }
     RegisterComponent.prototype.ngOnInit = function () {
         this.registerForm = this.formBuilder.group({
@@ -1160,27 +1172,30 @@ var RegisterComponent = /** @class */ (function () {
             email: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             mobile: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             password: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].minLength(6)]],
-            flag: true,
+            accFlag: true,
             role: 'admin'
         });
         this.agreeForm = this.formBuilder.group({});
         this.paymentForm = this.formBuilder.group({
+            agreementFlag: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+            modeOfPayment: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+            membership: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             chequeNumber: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             bankName: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             branchName: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
             amount: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]
         });
-        jquery__WEBPACK_IMPORTED_MODULE_4__(document).ready(function () {
-            jquery__WEBPACK_IMPORTED_MODULE_4__('#agreeForm').hide();
-            jquery__WEBPACK_IMPORTED_MODULE_4__('#paymentFrm').hide();
-            jquery__WEBPACK_IMPORTED_MODULE_4__('#offlineForm').hide();
-            jquery__WEBPACK_IMPORTED_MODULE_4__('#next').click(function () {
-                jquery__WEBPACK_IMPORTED_MODULE_4__('#paymentFrm').show();
-                jquery__WEBPACK_IMPORTED_MODULE_4__('#agreeForm').hide();
+        jquery__WEBPACK_IMPORTED_MODULE_5__(document).ready(function () {
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#agreeForm').hide();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#paymentFrm').hide();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#offlineForm').hide();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#next').click(function () {
+                jquery__WEBPACK_IMPORTED_MODULE_5__('#paymentFrm').show();
+                jquery__WEBPACK_IMPORTED_MODULE_5__('#agreeForm').hide();
             });
-            jquery__WEBPACK_IMPORTED_MODULE_4__('#finish').click(function () {
-                jquery__WEBPACK_IMPORTED_MODULE_4__('#paymentFrm').hide();
-                jquery__WEBPACK_IMPORTED_MODULE_4__('#regForm').show();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#finish').click(function () {
+                jquery__WEBPACK_IMPORTED_MODULE_5__('#paymentFrm').hide();
+                jquery__WEBPACK_IMPORTED_MODULE_5__('#regForm').show();
                 // redirect to profile page......
             });
         });
@@ -1193,6 +1208,14 @@ var RegisterComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RegisterComponent.prototype, "p", {
+        // convenience getter for easy access to form fields
+        get: function () {
+            return this.paymentForm.controls;
+        },
+        enumerable: true,
+        configurable: true
+    });
     RegisterComponent.prototype.onRegister = function (formValue) {
         this.submitted = true;
         // console.log(this.registerForm.value);
@@ -1200,31 +1223,31 @@ var RegisterComponent = /** @class */ (function () {
         if (this.registerForm.invalid) {
             return;
         }
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#agreeForm').show();
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#next').hide();
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#regForm').hide();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#agreeForm').show();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#next').hide();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#regForm').hide();
         this.close();
         this.jsonObject = JSON.stringify(formValue);
         console.log(this.jsonObject);
     };
     RegisterComponent.prototype.paymentSubmit = function (paymentFormValue) {
+        var _this = this;
         var paymentJSON = JSON.stringify(paymentFormValue);
-        console.log(paymentJSON);
-        this.jsonObject.concat(paymentJSON);
-        console.log(this.jsonObject);
-        // this._service.register(this.registerForm.value).subscribe(
-        //   data => {
-        //     console.log('Registration successful');
-        //     // this.alertService.success('Registration successful', true);
-        //     // this.router.navigate(['/login']);
-        //     $('#agreeForm').show();
-        //     $('#regForm').hide();
-        //   },
-        //   error => {
-        //     // this.alertService.error(error);
-        //     this.loading = false;
-        //   }
-        // );
+        var regJSON = [];
+        regJSON.push(JSON.parse(this.jsonObject));
+        regJSON.push(JSON.parse(paymentJSON));
+        this._service.register(JSON.stringify(regJSON)).subscribe(function (data) {
+            console.log('Registration successful');
+            localStorage.setItem('currentUser', JSON.stringify(data));
+            _this.router.navigate(['/profile']);
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#regForm').hide();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#agreeForm').hide();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#paymentFrm').hide();
+            jquery__WEBPACK_IMPORTED_MODULE_5__('#register-popup').hide();
+        }, function (error) {
+            // this.alertService.error(error);
+            _this.loading = false;
+        });
     };
     RegisterComponent.prototype.close = function () {
         this.registerForm = this.formBuilder.group({
@@ -1237,8 +1260,8 @@ var RegisterComponent = /** @class */ (function () {
     };
     RegisterComponent.prototype.closeAgreePopup = function () {
         // console.log($('#closeBtn'));
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#agreeForm').hide();
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#regForm').show();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#agreeForm').hide();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#regForm').show();
         this.agreeForm = this.formBuilder.group({
             agree: ''
         });
@@ -1246,13 +1269,37 @@ var RegisterComponent = /** @class */ (function () {
     RegisterComponent.prototype.agreeCall = function (event) {
         console.log(event.target.checked);
         // console.log(this.jsonObject);
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#next').show();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#next').show();
     };
     RegisterComponent.prototype.onLine = function () {
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#offlineForm').hide();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#offlineForm').hide();
     };
     RegisterComponent.prototype.offLine = function () {
-        jquery__WEBPACK_IMPORTED_MODULE_4__('#offlineForm').show();
+        jquery__WEBPACK_IMPORTED_MODULE_5__('#offlineForm').show();
+    };
+    RegisterComponent.prototype.emailCheck = function (e) {
+        var _this = this;
+        var emailId = e.target.value;
+        this._service.emailCheckService(emailId).subscribe(function (data) {
+            console.log('Email id already exisit!');
+            _this.emailUsed = true;
+        }, function (error) {
+            _this.emailUsed = false;
+        });
+    };
+    RegisterComponent.prototype.mobileCheck = function (e) {
+        var _this = this;
+        var mobile = e.target.value;
+        this._service.mobileCheckService(mobile).subscribe(function (data) {
+            var check = data;
+            if (check) {
+                console.log('Mobile number already exisit!');
+                _this.mobileUsed = true;
+            }
+            else {
+                _this.mobileUsed = false;
+            }
+        }, function (error) { });
     };
     RegisterComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1264,7 +1311,8 @@ var RegisterComponent = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _app_services_alert_service__WEBPACK_IMPORTED_MODULE_4__["AlertService"]])
     ], RegisterComponent);
     return RegisterComponent;
 }());
