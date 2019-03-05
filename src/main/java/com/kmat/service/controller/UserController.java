@@ -99,8 +99,6 @@ public class UserController {
 		List<User> data = mongoTemplate.find(Query.query(new Criteria().orOperator((Criteria.where("email").is(id)))),
 				User.class);
 
-		System.out.println(data.get(0).getMobile());
-
 		if (data.isEmpty()) {
 
 			return false;
