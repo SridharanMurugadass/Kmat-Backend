@@ -13,6 +13,15 @@ public class Profile {
 	private Date dob;
 	private String godName;
 	private String godPlace;
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	private String sex;
 
 	public List<Address> getAddress() {
 		return address;
