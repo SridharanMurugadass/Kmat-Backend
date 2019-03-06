@@ -1,28 +1,18 @@
 package com.kmat.service.exception;
 
-import java.util.Locale;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Error {
 
 	private ErrorCode errCode;
-	private Locale locale;
 	private Object[] args;
 	
 	private String code;
 	private String msg;
 
 	public Error() {}
-	
-	public Error(ErrorCode errorCode, Locale locale, Object...args) {
-		this(errorCode, null, locale, args);
-	}
-	
-	public Error(ErrorCode errorCode, String defaultMsg, Locale locale, Object...args) {
+	public Error(ErrorCode errorCode, Object...args) {
 		this.errCode = errorCode;
-		this.msg = defaultMsg;
-		this.locale = locale;
 		this.args = args;
 	}
 	
@@ -49,15 +39,6 @@ public class Error {
 
 	public void setErrCode(ErrorCode errCode) {
 		this.errCode = errCode;
-	}
-
-	@JsonIgnore
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
 	}
 
 	@JsonIgnore

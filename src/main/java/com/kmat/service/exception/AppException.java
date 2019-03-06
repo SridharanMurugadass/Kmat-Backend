@@ -2,7 +2,6 @@ package com.kmat.service.exception;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class AppException extends Exception {
 	private static final long serialVersionUID = 1L;
@@ -11,12 +10,16 @@ public class AppException extends Exception {
 	private ResponseStatusCode responseStatusCode;
 	
 	public AppException() {}
-	public AppException(ResponseStatusCode responseStatusCode, ErrorCode errCode, Locale locale) {
-		this(responseStatusCode, errCode, locale, null);
+	public AppException(ErrorCode errCode) {
+		this(null, errCode);
 	}
 	
-	public AppException(ResponseStatusCode responseStatusCode, ErrorCode errCode, Locale locale, Object...params) {
-		getErrors().add(new Error(errCode, locale, params));
+	public AppException(ResponseStatusCode responseStatusCode, ErrorCode errCode) {
+		this(responseStatusCode, errCode, null);
+	}
+	
+	public AppException(ResponseStatusCode responseStatusCode, ErrorCode errCode, Object...params) {
+		getErrors().add(new Error(errCode, params));
 		this.responseStatusCode = responseStatusCode;
 	}
 

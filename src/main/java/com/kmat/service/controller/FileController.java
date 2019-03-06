@@ -3,10 +3,7 @@ package com.kmat.service.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Optional;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,10 +30,10 @@ public class FileController {
 	@Autowired private ProfileRepo profileRepo;
 	
 	@PostMapping(path = "/profiles/{profileId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable("profileId") String profileId, Locale locale) throws Exception {
+	public void uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable("profileId") String profileId) throws Exception {
 		
 		if (StringUtils.isBlank(profileId)) {
-			throw new AppException(ResponseStatusCode.NOT_FOUND, ErrorCode.ENTITY_NOT_FOUND, locale);
+			throw new AppException(ResponseStatusCode.NOT_FOUND, ErrorCode.ENTITY_NOT_FOUND);
 		}
 		
 		if (file == null || file.getSize() <= 0) {
@@ -46,7 +43,7 @@ public class FileController {
 		Optional<Profile> profileOpt = profileRepo.findById(profileId);
 		
 		if (! profileOpt.isPresent()) { 
-			throw new AppException(ResponseStatusCode.NOT_FOUND, ErrorCode.ENTITY_NOT_FOUND, locale, "Profile");
+			throw new AppException(ResponseStatusCode.NOT_FOUND, ErrorCode.ENTITY_NOT_FOUND, "Profile");
 		}
 		
 		String pathname = profileId + "-" + (new Date()).getTime() + "."+getExtensionByStringHandling(file.getOriginalFilename());
