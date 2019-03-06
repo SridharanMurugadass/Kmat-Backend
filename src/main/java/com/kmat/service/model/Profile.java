@@ -13,6 +13,43 @@ public class Profile {
 	private Date dob;
 	private String godName;
 	private String godPlace;
+	private String firstname;
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	private String lastname;
+	private String email;
+	
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	private String sex;
 
 	public List<Address> getAddress() {
 		return address;
@@ -147,20 +184,20 @@ public class Profile {
 		this.currentCity = currentCity;
 	}
 
-	public String getMaritalStatuss() {
-		return maritalStatuss;
-	}
-
-	public void setMaritalStatuss(String maritalStatuss) {
-		this.maritalStatuss = maritalStatuss;
-	}
-
 	public String getNoOfChildren() {
 		return noOfChildren;
 	}
 
 	public void setNoOfChildren(String noOfChildren) {
 		this.noOfChildren = noOfChildren;
+	}
+
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getFamilyType() {
@@ -267,7 +304,7 @@ public class Profile {
 	private String education;
 	private String occupation;
 	private String currentCity;
-	private String maritalStatuss;
+	private String maritalStatus;
 	private String noOfChildren;
 	private String familyType;
 	private String familyStatus;

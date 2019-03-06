@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.kmat.service.model.Profile;
 import com.kmat.service.model.User;
 import com.kmat.service.repository.UserRepo;
 import com.kmat.service.utils.HashingService;
@@ -99,8 +100,6 @@ public class UserController {
 		List<User> data = mongoTemplate.find(Query.query(new Criteria().orOperator((Criteria.where("email").is(id)))),
 				User.class);
 
-		System.out.println(data.get(0).getMobile());
-
 		if (data.isEmpty()) {
 
 			return false;
@@ -159,10 +158,8 @@ public class UserController {
 		
 		JSONParser parser = new JSONParser(); 
 		JSONArray data = (JSONArray) parser.parse(json);
-		JSONObject Obj1 = (JSONObject) data.get(0);
-		
-		JSONObject register = (JSONObject) Obj1.get("register");
-		JSONObject payment = (JSONObject) Obj1.get("payment");
+		JSONObject register = (JSONObject) data.get(0);
+		JSONObject payment = (JSONObject) data.get(1);
 		
 		register.putAll(payment);
 		

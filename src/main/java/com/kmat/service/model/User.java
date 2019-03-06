@@ -14,6 +14,15 @@ public class User {
 	private Date createdDate;
 	private String chequeNumber;
 	private String modeOfPayment;
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	private String sex;
 	public String getModeOfPayment() {
 		return modeOfPayment;
 	}
