@@ -13,6 +13,7 @@ public class Profile {
 	private Date dob;
 	private String godName;
 	private String godPlace;
+<<<<<<< HEAD
 	private String firstname;
 	public String getFirstname() {
 		return firstname;
@@ -41,6 +42,8 @@ public class Profile {
 	private String lastname;
 	private String email;
 	
+=======
+>>>>>>> ec91f7c635fd39f78e3a29058b04876445332242
 	public String getSex() {
 		return sex;
 	}
