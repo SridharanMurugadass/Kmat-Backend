@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public class Profile {
+	
 	@Id
 	private String profileId;
+	private String mobile;
 	private String placeOfBirth;
 	private List<Relationship> relationShip;
 	private Date dob;
 	private String godName;
 	private String godPlace;
-<<<<<<< HEAD
 	private String firstname;
 	public String getFirstname() {
 		return firstname;
@@ -42,8 +45,6 @@ public class Profile {
 	private String lastname;
 	private String email;
 	
-=======
->>>>>>> ec91f7c635fd39f78e3a29058b04876445332242
 	public String getSex() {
 		return sex;
 	}
@@ -80,12 +81,12 @@ public class Profile {
 		this.dob = dob;
 	}
 
-	public String getProfileId() {
-		return profileId;
+	public String getMobile() {
+		return mobile;
 	}
 
-	public void setProfileId(String profileId) {
-		this.profileId = profileId;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	private String timeOfBirth;

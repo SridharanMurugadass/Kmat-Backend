@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import com.kmat.service.model.Profile;
 import com.kmat.service.model.User;
 import com.kmat.service.repository.UserRepo;
 import com.kmat.service.utils.HashingService;
@@ -71,7 +69,7 @@ public class UserController {
 
 			if (!data.isEmpty()) {
 
-				return getValueById(data.get(0).getMobile(), user.getPassword(), user);
+				return getValueById(data.get(0).getUserId(), user.getPassword(), user);
 			}
 
 			return null; // data not found

@@ -2,8 +2,6 @@ package com.kmat.service.controller;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.kmat.service.dao.ProfileDao;
 import com.kmat.service.model.Profile;
-import com.kmat.service.model.User;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.client.FindIterable;
+
 
 @RestController
 public class ProfileController {
@@ -38,7 +33,7 @@ public class ProfileController {
 	@PostMapping("/saveProfile")
 	public Profile saveProfile(@RequestBody Profile profile) {
 
-		LOGGER.debug("Id: {}, Profile: {}", profile.getProfileId());
+		LOGGER.debug("Id: {}, Profile: {}", profile.getMobile());
 
 		return dao.saveProfile(profile);
 
@@ -71,7 +66,9 @@ public class ProfileController {
 	  System.out.println("id"+id);
 
 		return mongoTemplate.find(
-				Query.query(new Criteria().andOperator((Criteria.where("_id").is(id)))),
+				Query.query(new Criteria()
+						.andOperator((Criteria.where("_id").regex(id))
+								,Criteria.where("firstname").regex(id))),
 				Profile.class);
 		
 	}

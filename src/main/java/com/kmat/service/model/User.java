@@ -3,17 +3,33 @@ package com.kmat.service.model;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public class User {
 
 	@Id
+	private String userId;
 	private String mobile;
 	private String firstname;
 	private String lastname;
+	private String password;
 	private String email;
 	private Date createdDate;
 	private String chequeNumber;
 	private String modeOfPayment;
+	private String bankName;
+	private String branchName;
+	private String amount;
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	
 	public String getSex() {
 		return sex;
 	}
@@ -72,11 +88,6 @@ public class User {
 		this.amount = amount;
 	}
 
-	private String bankName;
-	private String branchName;
-	private String amount;
-	
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -120,8 +131,6 @@ public class User {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
-	private String password;
 
 	public String getRole() {
 		return role;
