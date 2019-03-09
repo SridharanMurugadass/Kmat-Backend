@@ -31,7 +31,7 @@ public class ProfileController {
 
 	@CrossOrigin
 	@PostMapping("/saveProfile")
-	public Profile saveProfile(@RequestBody Profile profile) {
+	public Profile updateProfile(@RequestBody Profile profile) {
 
 		LOGGER.debug("Id: {}, Profile: {}", profile.getMobile());
 
@@ -63,11 +63,11 @@ public class ProfileController {
 	@GetMapping("/profileSearch/{id}")
 	public List<Profile> primarySearch(@PathVariable String id) {
 
-	  System.out.println("id"+id);
+	  System.out.println("id :"+id);
 
 		return mongoTemplate.find(
 				Query.query(new Criteria()
-						.andOperator((Criteria.where("_id").regex(id))
+						.andOperator((Criteria.where("mobile").regex(id))
 								,Criteria.where("firstname").regex(id))),
 				Profile.class);
 		

@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

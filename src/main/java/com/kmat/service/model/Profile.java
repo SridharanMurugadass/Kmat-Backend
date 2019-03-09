@@ -3,6 +3,7 @@ package com.kmat.service.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,9 +16,18 @@ public class Profile {
 	private String placeOfBirth;
 	private List<Relationship> relationShip;
 	private Date dob;
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
+	}
+
 	private String godName;
 	private String godPlace;
 	private String firstname;
+	
 	public String getFirstname() {
 		return firstname;
 	}

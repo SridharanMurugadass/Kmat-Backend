@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.kmat.service.dao.ProfileDao;
+import com.kmat.service.model.Profile;
 import com.kmat.service.model.User;
 import com.kmat.service.repository.UserRepo;
 import com.kmat.service.utils.HashingService;
@@ -36,6 +40,12 @@ public class UserController {
 	@Autowired
 	UserRepo repo;
 
+	@Autowired
+	ProfileDao dao;
+	
+	@Value("${server.url}")
+	private String serverUrl;
+
 	@CrossOrigin
 	@PostMapping("/signUp")
 	public User signUp(@RequestBody User user) {
@@ -48,9 +58,27 @@ public class UserController {
 
 		user.setCreatedDate(date);
 
-		repo.save(user);
+		User usr = repo.save(user);
+
+		Profile prof = saveProfile(usr);
+		
+		System.out.println(prof.getProfileId());
 
 		return user; // registration success
+
+	}
+
+	private Profile saveProfile(User usr) {
+
+		Profile prof = new Profile();
+
+		prof.setProfileId(usr.getUserId());
+		prof.setFirstname(usr.getFirstname());
+		prof.setLastname(usr.getLastname());
+		prof.setMobile(usr.getMobile());
+		prof.setSex(usr.getSex());
+
+		return dao.saveProfile(prof);
 
 	}
 
@@ -148,24 +176,24 @@ public class UserController {
 
 		return null;
 	}
-	
-	
+
 	@CrossOrigin
 	@PostMapping("/saveData")
 	public User save(@RequestBody String json) throws ParseException {
 		
-		JSONParser parser = new JSONParser(); 
+		System.out.println("serverUrl"+serverUrl);
+
+		JSONParser parser = new JSONParser();
 		JSONArray data = (JSONArray) parser.parse(json);
 		JSONObject register = (JSONObject) data.get(0);
 		JSONObject payment = (JSONObject) data.get(1);
-		
+
 		register.putAll(payment);
-		
+
 		RestTemplate restTemplate = new RestTemplate();
-	    User usr = restTemplate.postForObject( "https://kmat.herokuapp.com/signUp", register, User.class);
-		
+		User usr = restTemplate.postForObject(serverUrl+"/signUp", register, User.class);
+
 		return usr;
 	}
-	
 
 }

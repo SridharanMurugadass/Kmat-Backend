@@ -35,7 +35,9 @@ public class ProfileDao {
 
 		LOGGER.debug("Came Inside getProfile");
 
-		return profileRepo.save(profile);
+		Profile prof = profileRepo.save(profile);
+		
+		return prof;
 	}
 
 }
