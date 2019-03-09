@@ -5,4 +5,5 @@ import com.kmat.service.model.User;
 
 public interface UserRepo extends MongoRepository<User, String> {
 
+
 }
