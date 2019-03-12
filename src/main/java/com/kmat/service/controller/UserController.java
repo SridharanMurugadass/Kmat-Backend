@@ -87,7 +87,7 @@ public class UserController {
 	public Optional<User> signIn(@RequestBody User user) {
 
 		LOGGER.debug("email: {}, mobile: {}", user.getEmail(), user.getMobile());
-
+		
 		user.setPassword(HashingService.encodeValue(user.getPassword()));
 
 		if (!StringUtils.isBlank(user.getEmail())) {
@@ -96,6 +96,7 @@ public class UserController {
 					.is(user.getEmail()).andOperator(Criteria.where("password").is(user.getPassword()))))), User.class);
 
 			if (!data.isEmpty()) {
+				System.out.println("id1 : " + data.get(0).getUserId() + "pass : " +user.getPassword());
 
 				return getValueById(data.get(0).getUserId(), user.getPassword(), user);
 			}
@@ -103,9 +104,18 @@ public class UserController {
 			return null; // data not found
 
 		}
+		
+		List<User> data = mongoTemplate.find(Query.query(new Criteria().orOperator((Criteria.where("mobile")
+				.is(user.getMobile())))), User.class);
+		
+		if (!data.isEmpty()) {
 
-		return getValueById(user.getMobile(), user.getPassword(), user);
-
+		return getValueById(data.get(0).getUserId(), user.getPassword(), user);
+		
+		}
+		
+		return null; // data not found
+		
 	}
 
 	@CrossOrigin
@@ -152,6 +162,8 @@ public class UserController {
 	}
 
 	private Optional<User> getValueById(String id, String password, User user) {
+		
+		System.out.println("id : " + id + "pass : "+password );
 
 		Optional<User> check = repo.findById(id);
 
