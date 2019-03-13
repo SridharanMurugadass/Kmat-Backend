@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.kmat.service.model.Profile;
 import com.kmat.service.repository.ProfileRepo;
 import com.kmat.service.utils.FileUtil;
@@ -34,11 +33,15 @@ public class FileController {
 
 	@Autowired private ProfileRepo profileRepo;
 	
+	@Autowired
+	ServletContext servletContext;
+	
 	@CrossOrigin
 	@PostMapping(path = "/fileUpload/{profileId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable("profileId") String profileId) {
 		
 		System.out.println("profileId"+profileId);
+		
 		
 		if (StringUtils.isBlank(profileId)) {
 			// TODO: throw error
@@ -52,7 +55,7 @@ public class FileController {
 		
 		if (! profileOpt.isPresent()) { /*TODO throw error*/ }
 		
-		String pathname = "/Users/smurugadass/poc/data/"+profileId + "-" + (new Date()).getTime() + "."+getExtensionByStringHandling(file.getOriginalFilename());
+		String pathname = profileId + "-" + (new Date()).getTime() + "."+getExtensionByStringHandling(file.getOriginalFilename());
 		
 		System.out.println("pathname"+pathname);
 		try {

@@ -84,7 +84,7 @@ public class UserController {
 
 	@CrossOrigin
 	@PostMapping("/signIn")
-	public Optional<User> signIn(@RequestBody User user) {
+	public Optional<Profile> signIn(@RequestBody User user) {
 
 		LOGGER.debug("email: {}, mobile: {}", user.getEmail(), user.getMobile());
 		
@@ -161,17 +161,17 @@ public class UserController {
 
 	}
 
-	private Optional<User> getValueById(String id, String password, User user) {
+	private Optional<Profile> getValueById(String id, String password, User user) {
 		
 		System.out.println("id : " + id + "pass : "+password );
 
 		Optional<User> check = repo.findById(id);
-
+		
 		if (check.isPresent()) {
 
 			if (check.get().getPassword().equals(password)) {
 
-				return check; // password matches
+				return dao.getProfileById(id); // password matches
 			}
 
 			return null; // password doesn't matches
