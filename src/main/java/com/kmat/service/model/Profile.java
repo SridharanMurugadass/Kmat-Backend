@@ -385,11 +385,11 @@ public class Profile {
 	}
 
 	public boolean isDosham() {
-		return isDosham;
+		return dosham;
 	}
 
-	public void setDosham(boolean isDosham) {
-		this.isDosham = isDosham;
+	public void setDosham(boolean dosham) {
+		this.dosham = dosham;
 	}
 
 	public int getImageCount() {
@@ -400,7 +400,7 @@ public class Profile {
 		this.imageCount = imageCount;
 	}
 
-	private boolean isDosham;
+	private boolean dosham;
 	private int imageCount;
 
 }
