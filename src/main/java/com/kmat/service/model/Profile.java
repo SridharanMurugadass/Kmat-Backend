@@ -392,14 +392,6 @@ public class Profile {
 		this.isDosham = isDosham;
 	}
 
-	public String getDosham() {
-		return dosham;
-	}
-
-	public void setDosham(String dosham) {
-		this.dosham = dosham;
-	}
-
 	public int getImageCount() {
 		return imageCount;
 	}
@@ -409,7 +401,6 @@ public class Profile {
 	}
 
 	private boolean isDosham;
-	private String dosham;
 	private int imageCount;
 
 }
