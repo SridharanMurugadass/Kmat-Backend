@@ -14,8 +14,17 @@ public class Profile {
 	private String profileId;
 	private String mobile;
 	private String placeOfBirth;
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
 	private List<Relationship> relationShip;
 	private Date dob;
+	private String paymentId;
 	public String getProfileId() {
 		return profileId;
 	}

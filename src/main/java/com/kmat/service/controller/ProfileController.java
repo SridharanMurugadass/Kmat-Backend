@@ -75,6 +75,20 @@ public class ProfileController {
 	}
 	
 	
+	@CrossOrigin
+	@PostMapping("/savePay/{profileId}/{payId}")
+	public Profile savePay(String profileId, String payId) {
+
+		LOGGER.debug("Came Inside getProfile");
+
+		return dao.savePay(profileId, payId);
+
+	}
+	
+	
+	
+	
+	
 	
 
 	

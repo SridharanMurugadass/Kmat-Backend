@@ -22,7 +22,7 @@ public class ProfileDao {
 
 	@Autowired
 	UserRepo repo;
-	
+
 	@Autowired
 	MongoTemplate mongoTemplate;
 
@@ -52,7 +52,7 @@ public class ProfileDao {
 	}
 
 	private User updateUser(Profile prof) {
-		
+
 		User usr = mongoTemplate.findById(prof.getProfileId(), User.class);
 		usr.setMobile(prof.getMobile());
 		usr.setFirstname(prof.getFirstname());
@@ -61,6 +61,15 @@ public class ProfileDao {
 		mongoTemplate.save(usr);
 
 		return usr;
+	}
+
+	public Profile savePay(String profileId, String payId) {
+
+		Profile prof = mongoTemplate.findById(profileId, Profile.class);
+
+		prof.setPaymentId(payId);
+
+		return mongoTemplate.save(prof);
 	}
 
 }
