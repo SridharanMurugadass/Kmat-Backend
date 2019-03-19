@@ -39,8 +39,8 @@ public class FileController {
 	ServletContext servletContext;
 
 	@CrossOrigin
-	@PostMapping(path = "/saveFile/{profileId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ImageStore saveFile(@RequestParam("file") MultipartFile file, @PathVariable("profileId") String profileId)
+	@PostMapping(path = "/saveFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ImageStore saveFile(@RequestParam("file") MultipartFile file, @RequestParam("profileId") String profileId)
 			throws IOException {
 
 		System.out.println("profileId :" + profileId);
