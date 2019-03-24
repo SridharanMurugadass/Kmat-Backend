@@ -42,7 +42,6 @@ public class Profile {
 	private String lagnam;
 	private String star;
 	private Date dob;
-	private String paymentId;
 	private String godName;
 	private String godPlace;
 	private String firstname;
@@ -63,14 +62,6 @@ public class Profile {
 
 	public void setFile(Binary file) {
 		this.file = file;
-	}
-
-	public String getPaymentId() {
-		return paymentId;
-	}
-
-	public void setPaymentId(String paymentId) {
-		this.paymentId = paymentId;
 	}
 
 	private List<Relationship> relationShip;

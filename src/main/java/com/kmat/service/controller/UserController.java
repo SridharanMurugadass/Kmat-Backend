@@ -62,9 +62,11 @@ public class UserController {
 
 		Profile prof = saveProfile(usr);
 		
+		usr.setProfileId(prof.getProfileId());
+		
 		System.out.println(prof.getProfileId());
 
-		return user; // registration success
+		return usr; // registration success
 
 	}
 
@@ -204,6 +206,8 @@ public class UserController {
 
 		RestTemplate restTemplate = new RestTemplate();
 		User usr = restTemplate.postForObject(serverUrl+"/signUp", register, User.class);
+		
+		
 
 		return usr;
 	}

@@ -23,6 +23,16 @@ public class User {
 	private String amount;
 	private String role;
 	private boolean accFlag;
+	private String profileId;
+	
+
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
+	}
 
 	public String getUserId() {
 		return userId;
