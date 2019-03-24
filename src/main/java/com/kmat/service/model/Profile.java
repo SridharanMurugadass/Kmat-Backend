@@ -1,9 +1,7 @@
 package com.kmat.service.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -37,7 +35,6 @@ public class Profile {
 	private String siblingsMaritalStatus;
 	private String fatherOccupation;
 	private String fatherContactNo;
-	private List<String> imagePaths;
 	private String moonSign;
 	private String lagnam;
 	private String star;
@@ -52,10 +49,8 @@ public class Profile {
 	private String timeOfBirth;
 	private String faceComplex;
 	private boolean dosham;
-	private int imageCount;
 	private Binary file;
-	
-	
+
 	public Binary getFile() {
 		return file;
 	}
@@ -330,21 +325,6 @@ public class Profile {
 		this.fatherContactNo = fatherContactNo;
 	}
 
-	public List<String> getImagePaths() {
-		return imagePaths;
-	}
-
-	public void setImagePaths(List<String> imagePaths) {
-		this.imagePaths = imagePaths;
-	}
-
-	public void appendImagePath(String imagePath) {
-		if (this.imagePaths == null) {
-			this.imagePaths = new ArrayList<>();
-		}
-		this.imagePaths.add(imagePath);
-	}
-
 	public String getGodName() {
 		return godName;
 	}
@@ -399,14 +379,6 @@ public class Profile {
 
 	public void setDosham(boolean dosham) {
 		this.dosham = dosham;
-	}
-
-	public int getImageCount() {
-		return imageCount;
-	}
-
-	public void setImageCount(int imageCount) {
-		this.imageCount = imageCount;
 	}
 
 }
