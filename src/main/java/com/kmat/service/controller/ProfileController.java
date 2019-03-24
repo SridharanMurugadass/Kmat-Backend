@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kmat.service.dao.ProfileDao;
 import com.kmat.service.model.Profile;
 
-
 @RestController
 public class ProfileController {
 
@@ -28,7 +27,6 @@ public class ProfileController {
 
 	@Autowired
 	ProfileDao dao;
-	
 
 	@CrossOrigin
 	@PostMapping("/saveProfile")
@@ -59,22 +57,7 @@ public class ProfileController {
 		return dao.getProfileById(id);
 
 	}
-	
-	@CrossOrigin
-	@GetMapping("/profileSearch/{id}")
-	public List<Profile> primarySearch(@PathVariable String id) {
 
-	  System.out.println("id :"+id);
-
-		return mongoTemplate.find(
-				Query.query(new Criteria()
-						.andOperator((Criteria.where("mobile").regex(id))
-								,Criteria.where("firstname").regex(id))),
-				Profile.class);
-		
-	}
-	
-	
 	@CrossOrigin
 	@PostMapping("/savePay/{profileId}/{payId}")
 	public Profile savePay(@PathVariable String profileId, @PathVariable String payId) {
@@ -84,12 +67,18 @@ public class ProfileController {
 		return dao.savePay(profileId, payId);
 
 	}
-	
-	
-	
-	
-	
-	
 
-	
+	@CrossOrigin
+	@GetMapping("/profileSearch/{id}")
+	public List<Profile> primarySearch(@PathVariable String id) {
+
+		System.out.println("id :" + id);
+
+		return mongoTemplate.find(new Query().addCriteria(
+				new Criteria().orOperator((Criteria.where("mobile").regex(id)), Criteria.where("email").regex(id),
+						Criteria.where("firstname").regex(id), Criteria.where("lastname").regex(id))),
+				Profile.class);
+
+	}
+
 }

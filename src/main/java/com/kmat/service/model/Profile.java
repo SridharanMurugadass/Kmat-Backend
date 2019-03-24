@@ -9,11 +9,51 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Profile {
-	
+
 	@Id
 	private String profileId;
 	private String mobile;
 	private String placeOfBirth;
+	private String height;
+	private String weight;
+	private String bodyType;
+	private String foodHabits;
+	private String community;
+	private String kootam;
+	private String education;
+	private String occupation;
+	private String currentCity;
+	private String maritalStatus;
+	private String noOfChildren;
+	private String familyType;
+	private String familyStatus;
+	private String familyValues;
+	private String physicalStatus;
+	private String annualIncome;
+	private String prefferedLocation;
+	private String prefferedOccupation;
+	private String noOfSiblings;
+	private String siblingsMaritalStatus;
+	private String fatherOccupation;
+	private String fatherContactNo;
+	private List<String> imagePaths;
+	private String moonSign;
+	private String lagnam;
+	private String star;
+	private Date dob;
+	private String paymentId;
+	private String godName;
+	private String godPlace;
+	private String firstname;
+	private String sex;
+	private String lastname;
+	private String email;
+	private List<Address> address;
+	private String timeOfBirth;
+	private String faceComplex;
+	private boolean dosham;
+	private int imageCount;
+
 	public String getPaymentId() {
 		return paymentId;
 	}
@@ -23,8 +63,7 @@ public class Profile {
 	}
 
 	private List<Relationship> relationShip;
-	private Date dob;
-	private String paymentId;
+
 	public String getProfileId() {
 		return profileId;
 	}
@@ -33,10 +72,6 @@ public class Profile {
 		this.profileId = profileId;
 	}
 
-	private String godName;
-	private String godPlace;
-	private String firstname;
-	
 	public String getFirstname() {
 		return firstname;
 	}
@@ -61,9 +96,6 @@ public class Profile {
 		this.email = email;
 	}
 
-	private String lastname;
-	private String email;
-	
 	public String getSex() {
 		return sex;
 	}
@@ -72,8 +104,6 @@ public class Profile {
 		this.sex = sex;
 	}
 
-	private String sex;
-
 	public List<Address> getAddress() {
 		return address;
 	}
@@ -81,8 +111,6 @@ public class Profile {
 	public void setAddress(List<Address> address) {
 		this.address = address;
 	}
-
-	private List<Address> address;
 
 	public List<Relationship> getRelationShip() {
 		return relationShip;
@@ -107,9 +135,6 @@ public class Profile {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
-	private String timeOfBirth;
-	private String faceComplex;
 
 	public String getPlaceOfBirth() {
 		return placeOfBirth;
@@ -318,33 +343,6 @@ public class Profile {
 		this.imagePaths.add(imagePath);
 	}
 
-	private String height;
-	private String weight;
-	private String bodyType;
-	private String foodHabits;
-	private String community;
-	private String kootam;
-	private String education;
-	private String occupation;
-	private String currentCity;
-	private String maritalStatus;
-	private String noOfChildren;
-	private String familyType;
-	private String familyStatus;
-	private String familyValues;
-	private String physicalStatus;
-	private String annualIncome;
-	private String prefferedLocation;
-	private String prefferedOccupation;
-	private String noOfSiblings;
-	private String siblingsMaritalStatus;
-	private String fatherOccupation;
-	private String fatherContactNo;
-	private List<String> imagePaths;
-	private String moonSign;
-	private String lagnam;
-	private String star;
-
 	public String getGodName() {
 		return godName;
 	}
@@ -408,8 +406,5 @@ public class Profile {
 	public void setImageCount(int imageCount) {
 		this.imageCount = imageCount;
 	}
-
-	private boolean dosham;
-	private int imageCount;
 
 }

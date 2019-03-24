@@ -35,8 +35,5 @@ public class ImageStore {
 	public void setImageId(String imageId) {
 		this.imageId = imageId;
 	}
-	
-	
-
 
 }

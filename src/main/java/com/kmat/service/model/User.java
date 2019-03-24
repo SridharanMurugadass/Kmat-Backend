@@ -21,6 +21,9 @@ public class User {
 	private String bankName;
 	private String branchName;
 	private String amount;
+	private String role;
+	private boolean accFlag;
+
 	public String getUserId() {
 		return userId;
 	}
@@ -29,7 +32,6 @@ public class User {
 		this.userId = userId;
 	}
 
-	
 	public String getSex() {
 		return sex;
 	}
@@ -39,6 +41,7 @@ public class User {
 	}
 
 	private String sex;
+
 	public String getModeOfPayment() {
 		return modeOfPayment;
 	}
@@ -56,6 +59,7 @@ public class User {
 	}
 
 	private String membership;
+
 	public String getChequeNumber() {
 		return chequeNumber;
 	}
@@ -140,9 +144,6 @@ public class User {
 		this.role = role;
 	}
 
-	private String role;
-	private boolean accFlag;
-
 	public boolean isAccFlag() {
 		return accFlag;
 	}
@@ -174,8 +175,5 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
-	
-	
+
 }
