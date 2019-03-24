@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -53,6 +54,16 @@ public class Profile {
 	private String faceComplex;
 	private boolean dosham;
 	private int imageCount;
+	private Binary file;
+	
+	
+	public Binary getFile() {
+		return file;
+	}
+
+	public void setFile(Binary file) {
+		this.file = file;
+	}
 
 	public String getPaymentId() {
 		return paymentId;

@@ -1,5 +1,6 @@
 package com.kmat.service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.kmat.service.dao.ProfileDao;
+import com.kmat.service.model.ImageStore;
 import com.kmat.service.model.Profile;
 
 @RestController
@@ -72,12 +74,26 @@ public class ProfileController {
 	@GetMapping("/profileSearch/{id}")
 	public List<Profile> primarySearch(@PathVariable String id) {
 
-		System.out.println("id :" + id);
-
-		return mongoTemplate.find(new Query().addCriteria(
+		List<Profile> profiles = mongoTemplate.find(new Query().addCriteria(
 				new Criteria().orOperator((Criteria.where("mobile").regex(id)), Criteria.where("email").regex(id),
 						Criteria.where("firstname").regex(id), Criteria.where("lastname").regex(id))),
 				Profile.class);
+
+		for (Profile prof : profiles) {
+
+			List<ImageStore> store = mongoTemplate.find(
+					Query.query(new Criteria().orOperator((Criteria.where("profileId").is(prof.getProfileId())))),
+					ImageStore.class);
+
+			if (store != null) {
+
+				prof.setFile(store.get(0).getFile());
+
+			}
+
+		}
+
+		return profiles;
 
 	}
 
