@@ -59,15 +59,6 @@ public class ProfileController {
 
 	}
 
-	@CrossOrigin
-	@PostMapping("/savePay/{profileId}/{payId}")
-	public Profile savePay(@PathVariable String profileId, @PathVariable String payId) {
-
-		LOGGER.debug("Came Inside getProfile");
-
-		return dao.savePay(profileId, payId);
-
-	}
 
 	@CrossOrigin
 	@GetMapping("/profileSearch/{id}")

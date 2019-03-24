@@ -63,13 +63,5 @@ public class ProfileDao {
 		return usr;
 	}
 
-	public Profile savePay(String profileId, String payId) {
-
-		Profile prof = mongoTemplate.findById(profileId, Profile.class);
-
-		prof.setPaymentId(payId);
-
-		return mongoTemplate.save(prof);
-	}
 
 }
